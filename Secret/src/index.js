@@ -1,4 +1,4 @@
-import GreenThing from "./green";
+import GreenThing from "./green.js";
 
 let Canvas = document.getElementById("GameScreen");
 let Ctx = Canvas.getContext("2d");
