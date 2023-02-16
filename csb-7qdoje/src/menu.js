@@ -1,4 +1,4 @@
-import Game from "./game";
+import Game from "./game.js";
 
 export default class Menu {
   UpdateMenu(Ctx, Buttons, GameData, Images, DontClear, ButtonClicked) {
