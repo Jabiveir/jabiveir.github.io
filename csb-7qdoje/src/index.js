@@ -1,5 +1,5 @@
-import buttons from "./button";
-import Input from "./input";
+import buttons from "./button.js";
+import Input from "./input.js";
 let Buttons = new buttons();
 
 let Canvas = document.getElementById("GameScreen");
