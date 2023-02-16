@@ -234,12 +234,12 @@ export default class Game {
               200
             );
             Ctx.fillText("If they're unusually bright, they may", 320, 240);
-            Ctx.fillText("just be hallucinations.", 320, 280);
+            Ctx.fillText("just be hallucinations.", 320, 275);
           }
           if (GameData.DeathReason === "Fear") {
             Ctx.fillText("Jabiveir can smell fear, so if your", 320, 200);
-            Ctx.fillText("fear meter reaches max, you'll die.", 320, 240);
-            Ctx.fillText("Look on your computer to calm down.", 320, 280);
+            Ctx.fillText("fear meter reaches max, you'll die.", 320, 235);
+            Ctx.fillText("Look on your computer to calm down.", 320, 270);
           }
           if (GameData.Endless) {
             Ctx.fillText(
@@ -254,7 +254,7 @@ export default class Game {
                 GameData.VirusDiff +
                 " mode.",
               320,
-              340
+              310
             );
             let Cheats =
               +GameData.NoFrontalLobe +
@@ -271,7 +271,7 @@ export default class Game {
                 Challenges +
                 " challenges.",
               320,
-              260
+              345
             );
           }
 
