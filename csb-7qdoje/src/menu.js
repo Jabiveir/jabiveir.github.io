@@ -191,7 +191,7 @@ export default class Menu {
       Ctx.fillText("Five Nights at Jabiveir's", 320, 130);
       Ctx.font = "20px sans-serif";
       Ctx.textAlign = "left";
-      Ctx.fillText("Version 1.1", 5, 475);
+      Ctx.fillText("Version 1.2", 5, 475);
       Ctx.textAlign = "center";
     }
     if (GameData.MenuVar === 2) {
