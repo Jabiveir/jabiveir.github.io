@@ -1,4 +1,4 @@
-import menu from "./menu";
+import menu from "./menu.js";
 
 export default class InputHandler {
   constructor(Ctx, Buttons, GameData, Images) {
