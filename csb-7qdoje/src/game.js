@@ -233,8 +233,8 @@ export default class Game {
               320,
               200
             );
-            Ctx.fillText("If they're unusually bright, they may", 320, 240);
-            Ctx.fillText("just be hallucinations.", 320, 275);
+            Ctx.fillText("If they're unusually bright, they may", 320, 235);
+            Ctx.fillText("just be hallucinations.", 320, 270);
           }
           if (GameData.DeathReason === "Fear") {
             Ctx.fillText("Jabiveir can smell fear, so if your", 320, 200);
