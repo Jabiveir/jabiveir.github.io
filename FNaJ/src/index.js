@@ -148,6 +148,20 @@ for (let i = 0; i < ca.length; i++) {
     GameData.DoubleVirus = 2 - parseInt(c.substring(12, 13), 2);
   }
 }
+name = "Custom=";
+var decodedCookie = decodeURIComponent(document.cookie);
+var ca = decodedCookie.split(";");
+for (let i = 0; i < ca.length; i++) {
+  let c = ca[i];
+  while (c.charAt(0) === " ") {
+    c = c.substring(1);
+  }
+  if (c.indexOf(name) === 0) {
+    GameData.FearFactor = parseInt(c.substring(0,2), 10) - 10;
+    GameData.JabiDiff = parseInt(c.substring(2,4), 10) - 10;
+    GameData.VirusDiff = parseInt(c.substring(4,6), 10) - 10;
+  }
+}
 
 Buttons.NewButton(
   220,
