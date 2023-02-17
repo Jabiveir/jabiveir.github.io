@@ -129,7 +129,7 @@ export default class Menu {
         "" +
         (GameData.VirusDiff + 10) +
         "" +
-        +GameData.Endless +
+        (+GameData.Endless) +
         ";expires=" +
         d.toUTCString() +
         ";path=/";
