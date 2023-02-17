@@ -119,6 +119,20 @@ export default class Menu {
         }
         if (GameData.FearFactor < 1) GameData.FearFactor = 1;
       }
+      let d = new Date();
+      d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+      document.cookie =
+        "Custom=" +
+        (GameData.FearFactor + 10) +
+        "" +
+        (GameData.JabiDiff + 10) +
+        "" +
+        (GameData.VirusDiff + 10) +
+        "" +
+        +GameData.Endless +
+        ";expires=" +
+        d.toUTCString() +
+        ";path=/";
       Ctx.fillStyle = "#000";
       Ctx.font = "60px sans-serif ";
       Ctx.fillText("Custom Night", 320, 55);
