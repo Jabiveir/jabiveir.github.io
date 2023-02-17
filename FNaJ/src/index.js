@@ -160,6 +160,7 @@ for (let i = 0; i < ca.length; i++) {
     GameData.FearFactor = parseInt(c.substring(0,2), 10) - 10;
     GameData.JabiDiff = parseInt(c.substring(2,4), 10) - 10;
     GameData.VirusDiff = parseInt(c.substring(4,6), 10) - 10;
+    GameData.Endless = !!parseInt(c.substring(6,7), 10);
   }
 }
 
