@@ -17,6 +17,11 @@
 
   <body>
     <canvas id="GameScreen" width="720" height="552"></canvas>
+    <script>
+      let Canvas = document.getElementById("GameScreen");
+      let Ctx = Canvas.getContext("2d");
+      Ctx.fillRect(100,100,300,300);
+    </script>
     <script type="module" src="src/index.js"></script>
   </body>
 </html>
