@@ -1,4 +1,4 @@
-export default class Game {
+export default class game {
   constructor(Fullscreen, Ctx, Buttons, Menu, Keybinds, PData2, Level) {
     let PData = PData2;
     var Error = false;
