@@ -1,3 +1,7 @@
+let Canvas = document.getElementById("GameScreen");
+let Ctx = Canvas.getContext("2d");
+Ctx.fillRect(100,100,300,300);
+
 import "./styles.css";
 import fullscreen from "./fullscreen.js";
 import buttons from "./button.js";
@@ -5,8 +9,7 @@ import menu from "./menu.js";
 import game from "./game.js";
 import level from "./level.js";
 let Level = new level();
-let Canvas = document.getElementById("GameScreen");
-let Ctx = Canvas.getContext("2d");
+
 let Keybinds = {
   Jump: "w",
   Left: "a",
