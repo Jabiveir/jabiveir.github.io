@@ -1,5 +1,4 @@
 export default class menu {
-  //TEST COMMENT
   Update(Ctx, MenuVar, Keybinds, PData, Level) {
     Ctx.fillStyle = "#000";
     Ctx.textAlign = "center";
