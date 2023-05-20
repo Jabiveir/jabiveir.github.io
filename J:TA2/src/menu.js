@@ -34,7 +34,7 @@ export default class menu {
       let Hr = Math.floor(Time / 60 / 60 / 60);
       if (Hr < 10) Hr = "0" + Hr;
       let StrTime = Hr + ":" + Min + ":" + Sec;
-      if (PData.Level === 16 && PData.StartLevel === 1 && PData.SingSeg) {
+      if (PData.Level === 16 && PData.StartLevel === 1 && !PData.SingSeg) {
         if (Time < PData.S.BestFrames || PData.S.BestFrames === 0) {
           PData.S.BestFrames = Time;
           PData.S.BestNormalTime = StrTime;
