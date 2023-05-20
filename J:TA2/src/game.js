@@ -498,7 +498,10 @@ export default class game {
         }
         PData.Time += 1 / 4;
         if ((PData.Time * 100) % 1 !== 0) {
+          console.log("Rounding error detected!");
+          console.log("Time: " + PData.Time);
           PData.Time = Math.floor(PData.Time * 100 + 0.5) / 100;
+          console.log("Corrected Time: " + PData.Time);
         }
         if (PData.M.Gravity) {
           if (!PData.M.GravityFlip) PData.M.YVel -= 1 / 40;
