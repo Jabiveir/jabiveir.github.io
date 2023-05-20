@@ -1,4 +1,4 @@
-export default class Button {
+export default class button {
   constructor(Canvas, Keybinds) {
     this.Buttons = [];
     this.MenuVar = 0;
