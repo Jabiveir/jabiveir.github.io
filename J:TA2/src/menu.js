@@ -429,6 +429,7 @@ export default class menu {
         Ctx.fillText("It keeps momentum too!", 120, 112);
         Ctx.fillText("They can also be used to generate", 445, 102);
         Ctx.fillText("enough speed to clip through blocks!", 445, 125);
+        Ctx.fillStyle = "#fff";
         Ctx.fillText("You can float through Water Blocks!", 445, 400);
       }
       Ctx.fillStyle = "#0f0";
@@ -488,6 +489,9 @@ export default class menu {
       Ctx.fillStyle = "#000";
       Ctx.font = "60px sans-serif";
       Ctx.fillText("Jabiveir: The Adventure 2", 360, 150, 720);
+      Ctx.font = "30px sans-serif";
+      Ctx.textAlign = "left";
+      Ctx.fillText("Version 1.0", 7, 545);
     } else if (MenuVar === 1) {
     } else if (MenuVar === 2 || MenuVar === 3) {
       Ctx.textAlign = "center";
