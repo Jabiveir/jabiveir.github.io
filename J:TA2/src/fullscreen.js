@@ -1,4 +1,4 @@
-export default class Fullscreen {
+export default class fullscreen {
   constructor(Canvas, Ctx, Buttons, Menu, Keybinds, PData, Level) {
     this.Update(Ctx, Buttons, Menu, Keybinds, PData, Level);
     let Full = this;
