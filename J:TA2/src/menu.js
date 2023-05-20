@@ -491,7 +491,7 @@ export default class menu {
       Ctx.fillText("Jabiveir: The Adventure 2", 360, 150, 720);
       Ctx.font = "30px sans-serif";
       Ctx.textAlign = "left";
-      Ctx.fillText("Version 0.9", 7, 545);
+      Ctx.fillText("Version 0.91", 7, 545);
     } else if (MenuVar === 1) {
     } else if (MenuVar === 2 || MenuVar === 3) {
       Ctx.textAlign = "center";
