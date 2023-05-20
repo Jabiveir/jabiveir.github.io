@@ -20,10 +20,6 @@ export default class menu {
       Ctx.fillText("and " + PData.Attempts + " attempts!", 360, 215);
     } else if (MenuVar === -3) {
       PData.ReplayTime = 0;
-      let Backup = document.getElementById("CodeBackup");
-      Backup.textContent = PData.StartLevel + ";";
-      Backup.textContent += PData.Code + ";";
-      Backup.textContent += PData.CurrentReplay;
       Ctx.font = "80px sans-serif";
       Ctx.fillText("You win!", 360, 110);
       Ctx.font = "40px sans-serif";
