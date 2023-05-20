@@ -420,7 +420,7 @@ export default class game {
             }
           }
         }
-        if ((PData.Time + PData.ReplayTime) % 1 === 0) {
+        if (((PData.Time * 100) / 100 + PData.ReplayTime) % 1 === 0) {
           if (PData.Replaying) {
             Level.KeyDecompress(
               PData.K,
