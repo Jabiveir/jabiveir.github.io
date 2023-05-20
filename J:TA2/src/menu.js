@@ -34,8 +34,8 @@ export default class menu {
       let Hr = Math.floor(Time / 60 / 60 / 60);
       if (Hr < 10) Hr = "0" + Hr;
       let StrTime = Hr + ":" + Min + ":" + Sec;
-      if (PData.Level === 16 && PData.StartLevel === 1 && !PData.SingSeg) {
-        if (Time < PData.S.BestFrames || PData.S.BestFrames === -1) {
+      if (PData.Level === 16 && PData.StartLevel === 1 && PData.SingSeg) {
+        if (Time < PData.S.BestFrames || PData.S.BestFrames === 0) {
           PData.S.BestFrames = Time;
           PData.S.BestNormalTime = StrTime;
         }
@@ -605,8 +605,8 @@ export default class menu {
       i += 67;
       Ctx.fillRect(12, i, 146 * Math.min(PData.S.LevelsBeaten / 50, 1), 10);
       i += 67;
-      let w = 0
-      if(PData.S.BestFrames !== 0)
+      let w = 0;
+      if (PData.S.BestFrames !== 0)
         w = Math.max(Math.min(36000 / PData.S.BestFrames, 1), 0);
       Ctx.fillRect(12, i, 146 * w, 10);
       i += 67;
@@ -625,10 +625,16 @@ export default class menu {
       }
       Ctx.globalAlpha = 0.5;
       if (PData.S.PortalsTeleported >= 100) Ctx.fillRect(12, i - 43, 146, 53);
+      i -= 67;
       if (PData.S.TimesDashed >= 300) Ctx.fillRect(12, i - 43, 146, 53);
-      if (PData.S.BestNormalTime <= 36000 && PData.S.BestNormalTime !== 0) Ctx.fillRect(12, i - 43, 146, 53);
+      i -= 67;
+      if (PData.S.BestFrames <= 36000 && PData.S.BestFrames !== 0)
+        Ctx.fillRect(12, i - 43, 146, 53);
+      i -= 67;
       if (PData.S.LevelsBeaten >= 50) Ctx.fillRect(12, i - 43, 146, 53);
+      i -= 67;
       if (PData.S.Jumps >= 1000) Ctx.fillRect(12, i - 43, 146, 53);
+      i -= 67;
       if (PData.S.TotalDeaths >= 100) Ctx.fillRect(12, i - 43, 146, 53);
       Ctx.globalAlpha = 1;
     } else if (MenuVar === 4) {
