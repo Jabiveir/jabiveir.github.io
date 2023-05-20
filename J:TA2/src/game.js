@@ -518,4 +518,4 @@ export default class Game {
     if (PData.Dead) Level.LoadLevel(PData);
     Fullscreen.Update(Ctx, Buttons, Menu, Keybinds, PData, Level);
   }
-}
+};
