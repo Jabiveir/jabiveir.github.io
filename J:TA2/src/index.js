@@ -150,7 +150,7 @@ for (let i = 0; i < ca.length; i++) {
     c = c.substring(c.indexOf("-") + 1);
     PData.S.PortalsTeleported = parseInt(c.substring(0, c.indexOf("-")), 10);
     c = c.substring(c.indexOf("-") + 1);
-    PData.S.BeatLevelFast = (c === "true");
+    PData.S.BeatLevelFast = c === "true";
   }
 }
 
@@ -210,7 +210,20 @@ Buttons.New({
       this.BorderColor = "#f00";
       this.TextColor = "#f00";
     } else {
-      //RESET SAVE
+      let d = new Date();
+      d.setTime(d.getTime() - 24 * 60 * 60 * 1000);
+      let expires = "expires=" + d.toUTCString();
+      document.cookie = "MaxLev=-;" + expires + ";path=/";
+      document.cookie = "Stats=-;" + expires + ";path=/";
+      PData.MaxLevel = 1;
+      PData.S.TotalDeaths = 0;
+      PData.S.Jumps = 0;
+      PData.S.LevelsBeaten = 0;
+      PData.S.BestNormalTime = "N/A";
+      PData.S.BestFrames = 0;
+      PData.S.TimesDashed = 0;
+      PData.S.PortalsTeleported = 0;
+      PData.S.BeatLevelFast = 0;
       this.BorderColor = "#000";
       this.TextColor = "#000";
       Buttons.MenuVar = 0;
@@ -1339,4 +1352,3 @@ Buttons.New({
     }
   }
 });
-
