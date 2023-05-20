@@ -1,4 +1,4 @@
-export default class Level {
+export default class level {
   Decompress(Letter) {
     if (Letter === "!") return 62;
     if (Letter === "#") return 63;
