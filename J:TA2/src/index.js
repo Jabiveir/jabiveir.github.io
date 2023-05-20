@@ -2,7 +2,7 @@ import "./styles.css";
 import fullscreen from "./fullscreen.js";
 import buttons from "./button.js";
 import menu from "./menu.js";
-import Game from "./game.js";
+import game from "./game.js";
 import level from "./level.js";
 let Level = new level();
 let Canvas = document.getElementById("GameScreen");
