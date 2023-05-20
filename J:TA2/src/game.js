@@ -188,8 +188,7 @@ export default class game {
                 }
               } else if (Block >= 10000) {
                 if (!PData.M.InPortal2 && !PData.M.InPortal) {
-                  if(!PData.Replaying)
-                    PData.S.PortalsTeleported++;
+                  if (!PData.Replaying) PData.S.PortalsTeleported++;
                   PData.M.Y = (Block % 100) * 24 + 4;
                   PData.M.X = (Math.floor(Block / 100) % 100) * 24 + 2;
                 }
@@ -437,8 +436,7 @@ export default class game {
           if (PData.K.Up) {
             if (PData.M.OnGround && PData.M.Gravity && !PData.M.GravityFlip) {
               PData.M.YVel = 2.5;
-              if(!PData.Replaying)
-                PData.S.Jumps++;
+              if (!PData.Replaying) PData.S.Jumps++;
             }
             if (!PData.M.Gravity) PData.M.YVel += 0.3 - 1 / 16.7;
             else if (!PData.M.GravityFlip) PData.M.YVel += 1 / 16.7;
@@ -452,8 +450,7 @@ export default class game {
           if (PData.K.Down) {
             if (PData.M.OnGround && PData.M.Gravity && PData.M.GravityFlip) {
               PData.M.YVel = -2.5;
-              if(!PData.Replaying)
-                PData.S.Jumps++;
+              if (!PData.Replaying) PData.S.Jumps++;
             }
             if (!PData.M.Gravity) PData.M.YVel -= 0.3 - 1 / 16.7;
             else if (PData.M.GravityFlip) {
@@ -463,8 +460,7 @@ export default class game {
           if (PData.K.Dash && PData.M.Dash && !PData.M.OnGround) {
             if (PData.K.Up || PData.K.Left || PData.K.Right || PData.K.Down) {
               PData.M.Dash = false;
-              if(!PData.Replaying)
-                PData.S.TimesDashed++;
+              if (!PData.Replaying) PData.S.TimesDashed++;
             }
             if (PData.K.Up) PData.M.YVel = 2;
             if (PData.K.Left) PData.M.XVel -= 3;
@@ -501,8 +497,8 @@ export default class game {
           PData.M.XVel = 0;
         }
         PData.Time += 1 / 4;
-        if(PData.Time * 100 % 1 !== 0) {
-          PData.Time = Math.floor(PData.Time * 100 + 0.5) / 100
+        if ((PData.Time * 100) % 1 !== 0) {
+          PData.Time = Math.floor(PData.Time * 100 + 0.5) / 100;
         }
         if (PData.M.Gravity) {
           if (!PData.M.GravityFlip) PData.M.YVel -= 1 / 40;
@@ -521,4 +517,4 @@ export default class game {
     if (PData.Dead) Level.LoadLevel(PData);
     Fullscreen.Update(Ctx, Buttons, Menu, Keybinds, PData, Level);
   }
-}
+};
