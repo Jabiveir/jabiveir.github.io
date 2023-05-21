@@ -7,7 +7,6 @@ export default class menu {
       Ctx.fillText("Replay finished!", 360, 110);
       Ctx.font = "40px sans-serif";
       let Time = PData.RealTime;
-      if (PData.StartLevel > 0 && PData.StartLevel < 16) Time = PData.TotalTime;
       let Sec = Math.floor((Time / 60) * 1000) % 60000;
       if (Sec < 10000) Sec = "0" + Sec;
       Sec += "";
