@@ -67,111 +67,31 @@ export default class Game {
     };
     document.addEventListener("keydown", (event) => {
       if (GData.Board.length > 0 && !GData.Won) {
+        let P = (GData.CurrentP + 9).toString(14)
         switch (event.key) {
-          case GData.K.a.L:
-            if (GData.CurrentP === 1 && GData.Hovering > 0) {
-              let Temp = GData.Hovering;
-              GData.Hovering--;
+          case eval("GData.K." + P + ".L"):
+            if (GData.Hovering > 0) {
+              let Temp = -1;
+              GData.Hovering += Temp;
               while (this.PlacePiece(GData) === -1) {
-                if (GData.Hovering === 0) GData.Hovering = Temp;
-                else GData.Hovering--;
+                if (GData.Hovering === 0) Temp = -Temp;
+                GData.Hovering += Temp;
               }
             }
             break;
-          case GData.K.a.R:
-            if (GData.CurrentP === 1 && GData.Hovering < GData.Cols - 1) {
-              let Temp = GData.Hovering;
-              GData.Hovering++;
+          case eval("GData.K." + P + ".R"):
+            if (GData.Hovering < GData.Cols - 1) {
+              let Temp = 1;
+              GData.Hovering += Temp;
               while (this.PlacePiece(GData) === -1) {
-                if (GData.Hovering === GData.Cols - 1) GData.Hovering = Temp;
-                else GData.Hovering++;
+                if (GData.Hovering === GData.Cols - 1) Temp = -Temp;
+                GData.Hovering += Temp;
               }
             }
             break;
-          case GData.K.a.D:
-            if (GData.CurrentP === 1 && this.PlacePiece(GData) !== -1) {
-              GData.Board[GData.Hovering][this.PlacePiece(GData)] = "a";
-              if (this.DetectWin(GData)) GData.Won = true;
-              else GData.CurrentP = (GData.CurrentP % GData.PCount) + 1;
-            }
-            break;
-          case GData.K.b.L:
-            if (GData.CurrentP === 2 && GData.Hovering > 0) {
-              let Temp = GData.Hovering;
-              GData.Hovering--;
-              while (this.PlacePiece(GData) === -1) {
-                if (GData.Hovering === 0) GData.Hovering = Temp;
-                else GData.Hovering--;
-              }
-            }
-            break;
-          case GData.K.b.R:
-            if (GData.CurrentP === 2 && GData.Hovering < GData.Cols - 1) {
-              let Temp = GData.Hovering;
-              GData.Hovering++;
-              while (this.PlacePiece(GData) === -1) {
-                if (GData.Hovering === GData.Cols - 1) GData.Hovering = Temp;
-                else GData.Hovering++;
-              }
-            }
-            break;
-          case GData.K.b.D:
-            if (GData.CurrentP === 2 && this.PlacePiece(GData) !== -1) {
-              GData.Board[GData.Hovering][this.PlacePiece(GData)] = "b";
-              if (this.DetectWin(GData)) GData.Won = true;
-              else GData.CurrentP = (GData.CurrentP % GData.PCount) + 1;
-            }
-            break;
-          case GData.K.c.L:
-            if (GData.CurrentP === 3 && GData.Hovering > 0) {
-              let Temp = GData.Hovering;
-              GData.Hovering--;
-              while (this.PlacePiece(GData) === -1) {
-                if (GData.Hovering === 0) GData.Hovering = Temp;
-                else GData.Hovering--;
-              }
-            }
-            break;
-          case GData.K.c.R:
-            if (GData.CurrentP === 3 && GData.Hovering < GData.Cols - 1) {
-              let Temp = GData.Hovering;
-              GData.Hovering++;
-              while (this.PlacePiece(GData) === -1) {
-                if (GData.Hovering === GData.Cols - 1) GData.Hovering = Temp;
-                else GData.Hovering++;
-              }
-            }
-            break;
-          case GData.K.c.D:
-            if (GData.CurrentP === 3 && this.PlacePiece(GData) !== -1) {
-              GData.Board[GData.Hovering][this.PlacePiece(GData)] = "c";
-              if (this.DetectWin(GData)) GData.Won = true;
-              else GData.CurrentP = (GData.CurrentP % GData.PCount) + 1;
-            }
-            break;
-          case GData.K.d.L:
-            if (GData.CurrentP === 4 && GData.Hovering > 0) {
-              let Temp = GData.Hovering;
-              GData.Hovering--;
-              while (this.PlacePiece(GData) === -1) {
-                if (GData.Hovering === 0) GData.Hovering = Temp;
-                else GData.Hovering--;
-              }
-            }
-            break;
-          case GData.K.d.R:
-            if (GData.CurrentP === 4 && GData.Hovering < GData.Cols - 1) {
-              let Temp = GData.Hovering;
-              GData.Hovering++;
-              while (this.PlacePiece(GData) === -1) {
-                if (GData.Hovering === GData.Cols - 1) GData.Hovering = Temp;
-                else GData.Hovering++;
-              }
-            }
-            break;
-          case GData.K.d.D:
-            if (GData.CurrentP === 4 && this.PlacePiece(GData) !== -1) {
-              GData.Board[GData.Hovering][this.PlacePiece(GData)] = "d";
+          case eval("GData.K." + P + ".D"):
+            if (this.PlacePiece(GData) !== -1) {
+              GData.Board[GData.Hovering][this.PlacePiece(GData)] = P;
               if (this.DetectWin(GData)) GData.Won = true;
               else GData.CurrentP = (GData.CurrentP % GData.PCount) + 1;
             }
@@ -574,7 +494,10 @@ export default class Game {
         Ctx.clearRect(137, 162, 446, 126);
         Ctx.textAlign = "center";
         Ctx.font = "70px sans-serif";
-        Ctx.fillText("Player " + GData.CurrentP + " wins!", 360, 225);
+        if(!this.DetectDraw(GData))
+          Ctx.fillText("Player " + GData.CurrentP + " wins!", 360, 225);
+        else
+          Ctx.fillText("No one wins...", 360, 225)
         Ctx.font = "40px sans-serif";
         Ctx.fillText("Refresh to play again!", 360, 270);
       }
@@ -614,14 +537,18 @@ export default class Game {
   }
 
   DetectWin(GData) {
+    if(this.DetectDraw(GData))
+      return true
     let Count = 0;
     for (let i = 0; i < GData.PCount; i++) {
       if (GData.PTimes[i] !== 0) Count++;
     }
     if (Count === 1) {
       for (let i = 0; i < GData.PCount; i++) {
-        if (GData.PTimes[i] !== 0) GData.CurrentP = i;
-        return true;
+        if (GData.PTimes[i] !== 0) {
+          GData.CurrentP = i + 1;
+          return true;
+        }
       }
     }
     let WC = "";
@@ -648,5 +575,15 @@ export default class Game {
       }
     }
     return false;
+  }
+  DetectDraw(GData) {
+    let Draw = true
+    for(let i = 0; i < GData.Cols; i++) {
+      for(let j = 0; j < GData.Rows; j++) {
+        if(GData.Board[i][j] === "x")
+          Draw = false
+      }
+    }
+    return Draw
   }
 };
