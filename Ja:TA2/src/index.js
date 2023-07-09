@@ -1,3 +1,4 @@
+import "./styles.css";
 import fullscreen from "./fullscreen.js";
 import buttons from "./button.js";
 import menu from "./menu.js";
@@ -173,7 +174,7 @@ Buttons.New({
   H: 75,
   MenuShow: [0],
   MenuGoal: 2,
-  Text: "Settings",
+  Text: "Extras",
   FontSize: 45,
   Fun: function () {},
   Disp: function () {}
@@ -372,7 +373,7 @@ Buttons.New({
   H: 50,
   MenuShow: [2, 3],
   MenuGoal: 3,
-  Text: "Player Fast",
+  Text: "Speed Up",
   FontSize: 30,
   Fun: function () {
     let Listen = true;
@@ -394,7 +395,7 @@ Buttons.New({
   H: 50,
   MenuShow: [2, 3],
   MenuGoal: 3,
-  Text: "Player Slow",
+  Text: "Slow Down",
   FontSize: 30,
   Fun: function () {
     let Listen = true;
