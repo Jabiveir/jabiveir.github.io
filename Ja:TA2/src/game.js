@@ -16,26 +16,26 @@ export default class game {
     };
     document.addEventListener("keydown", (event) => {
       if (!PData.Replaying) {
-        switch (event.key) {
-          case Keybinds.Jump:
+        switch (event.key.toLowerCase()) {
+          case Keybinds.Jump.toLowerCase():
             PData.K.Up = true;
             break;
-          case Keybinds.Left:
+          case Keybinds.Left.toLowerCase():
             PData.K.Left = true;
             break;
-          case Keybinds.Right:
+          case Keybinds.Right.toLowerCase():
             PData.K.Right = true;
             break;
-          case Keybinds.Down:
+          case Keybinds.Down.toLowerCase():
             PData.K.Down = true;
             break;
-          case Keybinds.Dash:
+          case Keybinds.Dash.toLowerCase():
             PData.K.Dash = true;
             break;
-          case Keybinds.PlayerFast:
+          case Keybinds.PlayerFast.toLowerCase():
             PData.K.TimeUp = true;
             break;
-          case Keybinds.PlayerSlow:
+          case Keybinds.PlayerSlow.toLowerCase():
             PData.K.TimeDown = true;
             break;
           default:
@@ -44,26 +44,26 @@ export default class game {
     });
     document.addEventListener("keyup", (event) => {
       if (!PData.Replaying) {
-        switch (event.key) {
-          case Keybinds.Jump:
+        switch (event.key.toLowerCase()) {
+          case Keybinds.Jump.toLowerCase():
             PData.K.Up = false;
             break;
-          case Keybinds.Left:
+          case Keybinds.Left.toLowerCase():
             PData.K.Left = false;
             break;
-          case Keybinds.Right:
+          case Keybinds.Right.toLowerCase():
             PData.K.Right = false;
             break;
-          case Keybinds.Down:
+          case Keybinds.Down.toLowerCase():
             PData.K.Down = false;
             break;
-          case Keybinds.Dash:
+          case Keybinds.Dash.toLowerCase():
             PData.K.Dash = false;
             break;
-          case Keybinds.PlayerFast:
+          case Keybinds.PlayerFast.toLowerCase():
             PData.K.TimeUp = false;
             break;
-          case Keybinds.PlayerSlow:
+          case Keybinds.PlayerSlow.toLowerCase():
             PData.K.TimeDown = false;
             break;
           default:
