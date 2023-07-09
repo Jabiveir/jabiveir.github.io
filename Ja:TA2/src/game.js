@@ -16,7 +16,7 @@ export default class game {
     };
     document.addEventListener("keydown", (event) => {
       if (!PData.Replaying) {
-        switch (event.key) {
+        switch (event.key.toLowerCase()) {
           case Keybinds.Jump:
             PData.K.Up = true;
             break;
