@@ -656,4 +656,4 @@ export default class menu {
       Ctx.fillText("from the clipboard.", 360, 345);
     }
   }
-}
+};
