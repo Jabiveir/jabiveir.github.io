@@ -1,4 +1,3 @@
-import "./styles.css";
 import fullscreen from "./fullscreen.js";
 import buttons from "./button.js";
 import menu from "./menu.js";
