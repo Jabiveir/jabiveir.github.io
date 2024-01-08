@@ -1,6 +1,6 @@
-import Player from "./player";
-import InputHandler from "./input";
-import buttons from "./button";
+import Player from "./player.js";
+import InputHandler from "./input.js";
+import buttons from "./button.js";
 import fullscreen from "./fullscreen.js";
 let Buttons = new buttons();
 
