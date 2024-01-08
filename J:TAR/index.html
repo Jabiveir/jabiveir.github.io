@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Jabiveir: The Adventure</title>
+    <meta
+      charset="UTF-8"
+      user-scalable="no"
+      name="viewport"
+      content="width=device-width"
+    />
+    <style>
+      #GameScreen {
+        border: 2px solid black;
+        width: 720;
+        height: 480;
+        position: fixed;
+        left: 0;
+        top: 0;
+      }
+      body {
+        overscroll-behavior-block: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas id="GameScreen" width="720" height="480"></canvas>
+    <script type="module" src="src/index.js"></script>
+  </body>
+</html>
