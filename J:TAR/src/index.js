@@ -1,26 +1,18 @@
-let Canvas = document.getElementById("GameScreen");
-let Ctx = Canvas.getContext("2d");
-Ctx.fillStyle = "#000";
-Ctx.fillRect(10,10,20,20);
-
 import Player from "./player.js";
 import InputHandler from "./input.js";
 import buttons from "./button.js";
 import fullscreen from "./fullscreen.js";
-
-Ctx.fillStyle = "#000";
-Ctx.fillRect(40,10,20,20);
 let Buttons = new buttons();
 
 var MenuVar = 1;
 var Mobile = "Off";
 
+let Canvas = document.getElementById("GameScreen");
+let Ctx = Canvas.getContext("2d");
+
 let Jabiveir = new Player();
 let Fullscreen = new fullscreen(Canvas, Ctx, MenuVar, Buttons, Mobile);
 new InputHandler(Jabiveir, Ctx, Canvas, MenuVar, Fullscreen, Buttons, Mobile);
-
-Ctx.fillStyle = "#000";
-Ctx.fillRect(70,10,20,20);
 
 Ctx.font = "60px sans-serif ";
 Ctx.fillText("Jabiveir: The Adventure", 40, 130);
