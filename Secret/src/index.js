@@ -6,5 +6,5 @@ let Green = new GreenThing();
 
 Ctx.fillStyle = "#f00";
 Ctx.fillRect(0,0,480,480);
-Green.MakeItGreen(Ctx);
+Green.MakeItGreen(Ctx)
 Ctx.fillRect(0,0,480,480);
