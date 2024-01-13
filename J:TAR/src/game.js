@@ -4,13 +4,15 @@ export default class Game {
     window.onerror = function () {
       Error = true;
       Ctx.fillStyle = "#f00";
-      Ctx.fillRect(140, 180, 440, 220);
+      Ctx.fillRect(140, 130, 440, 220);
       Ctx.fillStyle = "#000";
       Ctx.font = "120px sans-serif";
-      Ctx.fillText("ERROR", 360, 300);
+      Ctx.textAlign = "center";
+      Ctx.fillText("ERROR", 360, 250);
       Ctx.font = "40px sans-serif";
-      Ctx.fillText("Game frozen to prevent", 360, 345);
-      Ctx.fillText("browser crash.", 360, 380);
+      Ctx.fillText("Game frozen to prevent", 360, 295);
+      Ctx.fillText("browser crash.", 360, 330);
+      Ctx.textAlign = "left";
     };
     var limitLoop = function (fn) {
       var then = new Date().getTime();
