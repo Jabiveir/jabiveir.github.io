@@ -1,4 +1,4 @@
-import LevelInit from "./levelinit";
+import LevelInit from "./levelinit.js";
 
 export default class levels {
   Collision(Ctx, Player, Level) {
