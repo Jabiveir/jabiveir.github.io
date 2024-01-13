@@ -1,4 +1,4 @@
-import Blocks from "./blocks";
+import Blocks from "./blocks.js";
 
 export default class LevelInit1 {
   LevelSetup1(Levels) {
