@@ -1,4 +1,4 @@
-console.log("Did it work 2???");
+console.log("Did it work 3???");
 
 import Player from "./player.js";
 import InputHandler from "./input.js";
