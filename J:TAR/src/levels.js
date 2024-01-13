@@ -59,6 +59,7 @@ export default class levels {
   }
 
   DrawLevel(Ctx, Level, Player) {
+    throw "This is an error";
     for (let i = 0; i < Levels[Level].length; i++)
       Levels[Level][i].DrawBlock(Ctx, Player);
   }
