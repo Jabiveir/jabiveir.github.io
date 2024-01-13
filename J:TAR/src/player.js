@@ -1,4 +1,4 @@
-import levels from "./levels";
+import levels from "./levels.js";
 let Levels = new levels();
 
 export default class Player {
