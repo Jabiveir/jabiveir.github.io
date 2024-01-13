@@ -1,5 +1,9 @@
 import LevelInit from "./levelinit.js";
 
+let Levels = [];
+let Init = new LevelInit();
+Init.LevelSetup1(Levels);
+
 export default class levels {
   Collision(Ctx, Player, Level) {
     if (Player.PData.XPos < 0) {
