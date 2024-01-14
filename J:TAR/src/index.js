@@ -1,5 +1,3 @@
-console.log("Did it work 4???");
-
 import Player from "./player.js";
 import InputHandler from "./input.js";
 import buttons from "./button.js";
