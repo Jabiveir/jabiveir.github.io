@@ -17,7 +17,7 @@ new InputHandler(Jabiveir, Ctx, Canvas, MenuVar, Fullscreen, Buttons, Mobile);
 Ctx.font = "60px sans-serif ";
 Ctx.fillText("Jabiveir: The Adventure", 40, 130);
 Ctx.font = "20px sans-serif";
-Ctx.fillText("Version 2.0", 5, 475);
+Ctx.fillText("Version 2.1", 5, 475);
 
 let Level = 0;
 let name = "Level=";
