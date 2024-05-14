@@ -113,6 +113,14 @@ export default class InputHandler {
             else if (X < window.innerWidth / 2) Player.PData.MovingLeft = true;
             else Player.PData.MovingRight = true;
           }
+          for (let i = 0; i < event.changedTouches.length; i++) {
+            let X = event.changedTouches[i].pageX;
+            let Y = event.changedTouches[i].pageY;
+            if (X > A && X < A + Canvas.width && Y > B && Y < B + Canvas.height)
+              Player.PData.Jumping = false;
+            else if (X < window.innerWidth / 2) Player.PData.MovingLeft = false;
+            else Player.PData.MovingRight = false;
+          }
         } else {
           for (let i = 0; i < event.touches.length; i++) {
             let Y = event.touches[i].pageX;
@@ -121,6 +129,15 @@ export default class InputHandler {
               Player.PData.Jumping = true;
             else if (X < window.innerHeight / 2) Player.PData.MovingLeft = true;
             else Player.PData.MovingRight = true;
+          }
+          for (let i = 0; i < event.changedTouches.length; i++) {
+            let Y = event.changedTouches[i].pageX;
+            let X = window.innerHeight - event.changedTouches[i].pageY;
+            if (X > B && X < B + Canvas.height && Y > A && Y < A + Canvas.width)
+              Player.PData.Jumping = false;
+            else if (X < window.innerHeight / 2)
+              Player.PData.MovingLeft = false;
+            else Player.PData.MovingRight = false;
           }
         }
       }
@@ -135,6 +152,14 @@ export default class InputHandler {
           Canvas.style.top.substring(0, Canvas.style.top.length - 2)
         );
         if (Mobile !== "Vertical") {
+          for (let i = 0; i < event.touches.length; i++) {
+            let X = event.touches[i].pageX;
+            let Y = event.touches[i].pageY;
+            if (X > A && X < A + Canvas.width && Y > B && Y < B + Canvas.height)
+              Player.PData.Jumping = true;
+            else if (X < window.innerWidth / 2) Player.PData.MovingLeft = true;
+            else Player.PData.MovingRight = true;
+          }
           for (let i = 0; i < event.changedTouches.length; i++) {
             let X = event.changedTouches[i].pageX;
             let Y = event.changedTouches[i].pageY;
@@ -144,6 +169,14 @@ export default class InputHandler {
             else Player.PData.MovingRight = false;
           }
         } else {
+          for (let i = 0; i < event.touches.length; i++) {
+            let Y = event.touches[i].pageX;
+            let X = window.innerHeight - event.touches[i].pageY;
+            if (X > B && X < B + Canvas.height && Y > A && Y < A + Canvas.width)
+              Player.PData.Jumping = true;
+            else if (X < window.innerHeight / 2) Player.PData.MovingLeft = true;
+            else Player.PData.MovingRight = true;
+          }
           for (let i = 0; i < event.changedTouches.length; i++) {
             let Y = event.changedTouches[i].pageX;
             let X = window.innerHeight - event.changedTouches[i].pageY;
@@ -159,9 +192,51 @@ export default class InputHandler {
     document.addEventListener(
       "touchmove",
       (event) => {
+      if (Mobile !== "Off" && MenuVar === 2) {
         event.preventDefault();
-      },
-      { passive: false }
-    );
+        let A = parseInt(
+          Canvas.style.left.substring(0, Canvas.style.left.length - 2)
+        );
+        let B = parseInt(
+          Canvas.style.top.substring(0, Canvas.style.top.length - 2)
+        );
+        if (Mobile !== "Vertical") {
+          for (let i = 0; i < event.touches.length; i++) {
+            let X = event.touches[i].pageX;
+            let Y = event.touches[i].pageY;
+            if (X > A && X < A + Canvas.width && Y > B && Y < B + Canvas.height)
+              Player.PData.Jumping = true;
+            else if (X < window.innerWidth / 2) Player.PData.MovingLeft = true;
+            else Player.PData.MovingRight = true;
+          }
+          for (let i = 0; i < event.changedTouches.length; i++) {
+            let X = event.changedTouches[i].pageX;
+            let Y = event.changedTouches[i].pageY;
+            if (X > A && X < A + Canvas.width && Y > B && Y < B + Canvas.height)
+              Player.PData.Jumping = false;
+            else if (X < window.innerWidth / 2) Player.PData.MovingLeft = false;
+            else Player.PData.MovingRight = false;
+          }
+        } else {
+          for (let i = 0; i < event.touches.length; i++) {
+            let Y = event.touches[i].pageX;
+            let X = window.innerHeight - event.touches[i].pageY;
+            if (X > B && X < B + Canvas.height && Y > A && Y < A + Canvas.width)
+              Player.PData.Jumping = true;
+            else if (X < window.innerHeight / 2) Player.PData.MovingLeft = true;
+            else Player.PData.MovingRight = true;
+          }
+          for (let i = 0; i < event.changedTouches.length; i++) {
+            let Y = event.changedTouches[i].pageX;
+            let X = window.innerHeight - event.changedTouches[i].pageY;
+            if (X > B && X < B + Canvas.height && Y > A && Y < A + Canvas.width)
+              Player.PData.Jumping = false;
+            else if (X < window.innerHeight / 2)
+              Player.PData.MovingLeft = false;
+            else Player.PData.MovingRight = false;
+          }
+        }
+      }
+    });
   }
 };
