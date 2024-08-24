@@ -1,5 +1,5 @@
-import LevelInit1 from "./levelinit1";
-import LevelInit2 from "./levelinit2";
+import LevelInit1 from "./levelinit1.js";
+import LevelInit2 from "./levelinit2.js";
 
 let Levels = [];
 let Init1 = new LevelInit1();
