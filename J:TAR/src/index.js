@@ -19,6 +19,7 @@ Ctx.fillText("Jabiveir: The Adventure", 40, 130);
 Ctx.font = "20px sans-serif";
 Ctx.fillText("Version 2.1", 5, 475);
 
+//OAWUFBAWIOUBGAOWUGB
 console.log(document.cookie.substring(document.cookie.indexOf("Night"), document.cookie.indexOf(";")));
 
 let Level = 0;
