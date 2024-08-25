@@ -21,6 +21,7 @@ Ctx.fillText("Version 2.1", 5, 475);
 
 //OAWUFBAWIOUBGAOWUGB
 console.log(document.cookie.substring(document.cookie.indexOf("Night"), document.cookie.indexOf(";")));
+console.log("BONER PLEASE");
 
 let Level = 0;
 let name = "Level=";
