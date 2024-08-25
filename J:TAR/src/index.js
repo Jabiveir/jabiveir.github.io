@@ -19,6 +19,8 @@ Ctx.fillText("Jabiveir: The Adventure", 40, 130);
 Ctx.font = "20px sans-serif";
 Ctx.fillText("Version 2.1", 5, 475);
 
+console.log(document.cookie);
+
 let Level = 0;
 let name = "Level=";
 let decodedCookie = decodeURIComponent(document.cookie);
