@@ -36,6 +36,8 @@ for (let i = 0; i < ca.length; i++) {
     Level = c.substring(name.length, c.length);
   }
 }
+if(Level > 16)
+  Level = 0;
 
 Jabiveir.Spawn(Ctx, Number(Level), Mobile);
 Buttons.Play(Ctx);
