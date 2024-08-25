@@ -35,6 +35,8 @@ for (let i = 0; i < ca.length; i++) {
 		Level = c.substring(name.length, c.length);
 	}
 }
+if(Level > 9)
+	Level = 0;
 Jabiveir.Spawn(Ctx, Number(Level));
 Buttons.Play(Ctx);
 Buttons.WipeSave(Ctx);
