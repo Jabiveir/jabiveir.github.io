@@ -19,12 +19,8 @@ Ctx.fillText("Jabiveir: The Adventure", 40, 130);
 Ctx.font = "20px sans-serif";
 Ctx.fillText("Version 2.1", 5, 475);
 
-//OAWUFBAWIOUBGAOWUGB
-console.log(document.cookie.substring(document.cookie.indexOf("Night"), document.cookie.indexOf(";")));
-console.log("BONER PLEASE");
-
 let Level = 0;
-let name = "Level=";
+let name = "RLevel=";
 let decodedCookie = decodeURIComponent(document.cookie);
 let ca = decodedCookie.split(";");
 for (let i = 0; i < ca.length; i++) {
@@ -36,8 +32,6 @@ for (let i = 0; i < ca.length; i++) {
     Level = c.substring(name.length, c.length);
   }
 }
-if(Level > 16)
-  Level = 0;
 
 Jabiveir.Spawn(Ctx, Number(Level), Mobile);
 Buttons.Play(Ctx);
