@@ -23,7 +23,7 @@ let Jabiveir = new Player();
 new InputHandler(Jabiveir, Filler, Ctx, Bullet);
 
 let Level = 0;
-let name = "Level=";
+let name = "JGLevel=";
 let decodedCookie = decodeURIComponent(document.cookie);
 let ca = decodedCookie.split(";");
 for (let i = 0; i < ca.length; i++) {
