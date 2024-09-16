@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JabiWiki</title>
+    <meta
+      charset="UTF-8"
+      user-scalable="no"
+      name="viewport"
+      content="width=device-width"
+    />
+    <style>
+      body {
+        overscroll-behavior-block: none;
+      }
+      a[button]:hover span {
+        color: #0d0 !important;
+        cursor: pointer;
+      }
+      [button][blob]:hover {
+        background-color: #eee !important;
+        cursor: pointer;
+      }
+      div[button]:hover {
+        background-color: #eee !important;
+        cursor: pointer;
+      }
+      [blob] {
+        margin-top: 20px;
+        padding: 3px;
+        font-size: 20px;
+        background-color: #fff;
+        border-style: solid;
+        border-width: 2px;
+        box-shadow: 3px 3px #bb0;
+      }
+      [file] {
+        background-color: #fff;
+        padding: 5px;
+        margin: 2%;
+        box-shadow: 4px 4px #800;
+      }
+      [file] img {
+        width: calc(100% - 4px);
+        border: solid 2px;
+      }
+      [foot] {
+        position: absolute;
+        background-color: #fff;
+        border: solid 2px;
+        padding: 3px;
+        top: -3px
+      }
+      p {
+        margin: 0;
+      }
+      div[signal] [foot] {
+        bottom: 0;
+      }
+      @keyframes Boop {
+        0% {box-shadow: 4px 4px 4px #0ff, -4px -4px 4px #0ff, 4px -4px 4px #0ff, -4px 4px 4px #0ff}
+        60% {box-shadow: 0 0 4px #0ff, 0 0 4px #0ff}
+        75% {box-shadow: 0 0 0 #0ff, 0 0 0 #0ff}
+        100% {box-shadow: 4px 4px #800}
+      }
+    </style>
+  </head>
+
+  <body>
+    <div style="position: fixed; left: 0; top: 0; width: 100%; height: 53px; background-color: #dfd; border-bottom-style: solid">
+        <a button href="https://jabiveir.com"><span style="font-size: 45px; position: absolute; right: 7px; top: 3px; color: #0f0; text-shadow: -1px 0 #040, 0 1px #040, 1px 0 #040, 0 -1px #040; user-select: none"><b>Jabiveir Website</b></span></a>
+        <a href="./index.html"><div style="color: #000; border-style: solid; border-bottom-color: #ff8; position: fixed; width: 250px; height: 47px; top: 3px; left: 3px; text-align: center; background-color: #ff8">
+          <span style="font-size: 40px; user-select: none;">Jabiveir Wiki</span>
+        </div></a>
+      </div>
+    
+    <div style="position: fixed; left: 0; top: 56px; width: 100%; height: calc(100% - 53px);">
+        <div id="page" style="position: absolute; left: 0; top: 0; width: 75%; height: calc(100% - 20px); background-color: #ff8; padding: 10px; overflow-y: auto">
+            <p style="font-size: 50px;"><b style="padding: 3px; border-bottom-style: solid">Skeleton Page!</b></p>
+            <p blob style="margin-top: 16px">Welcome to the skeleton page! Heeheehoohoo!<br>This was a test page, as well as the first Jabiveir Wiki page created, and it includes random elements that were put together to test various aspects of the Wiki's "base" page functionality.</p>
+            <span button blob id="1C" style="font-size: 36px; user-select: none; display: block" onclick="Switch(this);"><b>></b> Page History</span>
+            <div blob id="1O" style="display: none;">
+                <span style="display: block; font-size: 36px; cursor: pointer; user-select: none;" onclick="Switch(this.parentElement);"><b>v</b><span style="position: absolute; left: 44.5px">Page History</span></span>
+                <p>This section details some neat history about this page and the Wiki.</p>    
+                <br>
+                <span style="font-size: 28px"><b>Development</b></span>
+                <p>This page was built in simultaneity with the Wiki's layout, being where different designs were tested. As such, it includes at least one instance of several features that needed to be tested. Once design and testing were complete, much of the old placeholder text was replaced with what you're reading now. Notably, this was the only Jabiveir Wiki page built from scratch.</p>
+                <br>
+                <span style="font-size: 28px"><b>Proceeding Use</b></span>
+                <p>The development of this page was for more than just layout design and bug testing, as the source code was used as a template for every other Jabiveir Wiki page made afterwards (thus, every other page). This was done by taking the code as a string, identifying which parts would vary between pages, and making variables for those sections; a program was then made to input pre-written text for those variables and splice them into the code, thereby easily making a complete Wiki page. The program that was used is being written about vaguely because, as of writing this, I haven't made it yet.</p>
+                <br>
+                <span style="font-size: 28px"><b>The Rest of the Page</b></span>
+                <p>There used to be more sections to this page, but they have since been removed, as they were just copy-pasted nonsense meant to test the page's scrolling.</p>
+            </div>
+            <span foot style="right: 0">
+                Page last updated: 14/08/2024
+            </span>
+        </div>
+        <div style="position: absolute; right: 0; top: 0; width: calc(25% - 20px); height: calc(100% - 10px); background-color: #f88; overflow-y: auto; padding-bottom: 10px;">
+            <h1 style="margin: 0; margin-left: 8px; margin-bottom: -5px">Gallery</h1>
+            <div><div file id="SKELEDANCE!">
+                <img src="./Gal/SKELEDANCE!.gif">
+                <p>A funny little skeleton dance.</p>
+            </div></div>
+            <div><div file id="Skelewalk">
+              <img src="./Gal/Skelewalk.gif">
+              <p>Skelebones walkin'.</p>
+            </div></div>
+            
+            <div><div file id="SkeletonDance">
+                <video width="100%" controls>
+                    <source src="./Gal/SkeletonDance.mp4">
+                </video>
+                <p>Skeleton dancing to "Espionage" by Nokia.</p>
+            </div></div>
+            <div><div file id="SkeletorLaugh">
+                <audio width="100%" controls>
+                    <source src="./Gal/SkeletorLaugh.mp3">
+                </audio>
+                <p>Audio from "<a href="https://www.youtube.com/watch?v=syhOt6KS5X0">skeletor having the most pleasant day</a>" by Masky.</p>
+            </div></div>
+        </div>
+    </div>
+    
+    <script>
+        function Shine(Id) {
+            let str = document.getElementById(Id).parentElement.innerHTML;
+            document.getElementById(Id).parentElement.innerHTML = str;
+            document.getElementById(Id).style.animation = "Boop 1s"
+        }
+        function Switch(El) {
+            El.style.display = 'none';
+            let Num = El.id.substring(0, El.id.length-1);
+            if(El.id.substring(El.id.length-1) === "C")
+                document.getElementById(Num + "O").style.display = 'block';
+            else
+                document.getElementById(Num + "C").style.display = 'block';
+        }
+    </script>
+  </body>
+</html>
