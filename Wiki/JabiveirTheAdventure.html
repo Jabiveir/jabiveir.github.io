@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JabiWiki - Jabiveir: The Adventure</title>
+        <meta charset="UTF-8" user-scalable="no" name="viewport" content="width=device-width" />
+        <style>
+            body {
+                overscroll-behavior-block: none;
+            }
+            a[button]:hover span {
+                color: #0d0 !important;
+                cursor: pointer;
+            }
+            [button][blob]:hover {
+                background-color: #eee !important;
+                cursor: pointer;
+            }
+            div[button]:hover {
+                background-color: #eee !important;
+                cursor: pointer;
+            }
+            [blob] {
+                margin-top: 20px;
+                padding: 3px;
+                font-size: 20px;
+                background-color: #fff;
+                border-style: solid;
+                border-width: 2px;
+                box-shadow: 3px 3px #bb0;
+            }
+            [file] {
+                background-color: #fff;
+                padding: 5px;
+                margin: 2%;
+                box-shadow: 4px 4px #800;
+            }
+            [file] img {
+                width: calc(100% - 4px);
+                border: solid 2px;
+            }
+            [foot] {
+                position: absolute;
+                background-color: #fff;
+                border: solid 2px;
+                padding: 3px;
+                top: -3px;
+            }
+            p {
+                margin: 0;
+            }
+            table, th, td {
+                border: 1px solid;
+            }
+            @keyframes Boop {
+                0% {
+                    box-shadow: 4px 4px 4px #0ff, -4px -4px 4px #0ff, 4px -4px 4px #0ff, -4px 4px 4px #0ff;
+                }
+                60% {
+                    box-shadow: 0 0 4px #0ff, 0 0 4px #0ff;
+                }
+                75% {
+                    box-shadow: 0 0 0 #0ff, 0 0 0 #0ff;
+                }
+                100% {
+                    box-shadow: 4px 4px #800;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div style="position: fixed; left: 0; top: 0; width: 100%; height: 53px; background-color: #dfd; border-bottom-style: solid;">
+            <a button href="https://jabiveir.com">
+                <span style="font-size: 45px; position: absolute; right: 7px; top: 3px; color: #0f0; text-shadow: -1px 0 #040, 0 1px #040, 1px 0 #040, 0 -1px #040; user-select: none;"><b>Jabiveir Website</b></span>
+            </a>
+            <a href="./index.html">
+                <div style="color: #000; border-style: solid; border-bottom-color: #ff8; position: fixed; width: 250px; height: 47px; top: 3px; left: 3px; text-align: center; background-color: #ff8;">
+                    <span style="font-size: 40px; user-select: none;">Jabiveir Wiki</span>
+                </div>
+            </a>
+        </div>
+        <div style="position: fixed; left: 0; top: 56px; width: 100%; height: calc(100% - 53px);">
+            <div id="page" style="position: absolute; left: 0; top: 0; width: 75%; height: calc(100% - 20px); background-color: #ff8; padding: 10px; overflow-y: auto;">
+                <p style="font-size: 50px;"><b style="padding: 3px; border-bottom-style: solid;">Jabiveir: The Adventure</b></p>
+                <p blob style="margin-top: 16px;">
+                    Jabiveir: The Adventure is a fairly challenging platformer game, made using JavaScript's canvas. The game has 18 levels, with a very inconsistent difficulty curve. This game kept in many poor design choices during
+                    development, but most were fixed in Jabiveir: The Adventure Redux. Guides to each level can be found <a onclick="Shine('JTAWalkthrough')" href="#JTAWalkthrough">in this video</a>.
+                </p>
+                <span button blob id="1C" style="font-size: 36px; user-select: none; display: block;" onclick="Switch(this);"><b>></b> History</span>
+                <div blob id="1O" style="display: none;">
+                    <span style="display: block; font-size: 36px; cursor: pointer; user-select: none;" onclick="Switch(this.parentElement);"><b>v</b><span style="position: absolute; left: 44.5px;">History</span></span>
+                    <p>
+                        As of writing this, the exact dates of when the development of this game started and ended are unknown, but it is believed that the game was released around the start of August, 2022. This was the second Jabiveir
+                        Website game to be developed, and the first to involve any actual JavaScript, allowing it to be much more technically advanced. The game was partially designed with speedrunning in mind, leaving in some glitches and
+                        design quirks that would allow for shortcuts.
+                    </p>
+                </div>
+                <span button blob id="2C" style="font-size: 36px; user-select: none; display: block;" onclick="Switch(this);"><b>></b> Mechanics</span>
+                <div blob id="2O" style="display: none;">
+                    <span style="display: block; font-size: 36px; cursor: pointer; user-select: none;" onclick="Switch(this.parentElement);"><b>v</b><span style="position: absolute; left: 44.5px;">Mechanics</span></span>
+                    <p>
+                        This game's mechanics are relatively simple, with the left and right arrow keys being used to move left and right, respectively, and the up arrow key being used to jump; the player must traverse obstacles and avoid
+                        danger to reach the green flag at the end of each level. With specificity, however, the mechanics of this game become much more complex. If you need more detail than these subsections provide, I would recommend
+                        simply reading the code for this game on the <a href="https://github.com/Jabiveir/jabiveir.github.io">GitHub page</a> for this website.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>Frames</b></span>
+                    <p>
+                        In game design, a "frame" is a single, discrete instance of gameplay, accompanied by a single image displayed on the screen; the game looks smooth and continuous when many frames are displayed sequentially in a short
+                        amount of time. In this game along with many other Jabiveir games, the framerate is limited to a maximum of 60 frames per second, and because DeltaTime is not used to account for differences in framerate, playing
+                        this game with lower than 60 FpS effectively slows down the game. Additionally, in each frame of gameplay, there are 4 "subframes", in which Jabiveir moves in increments of a quarter of the current velocities, and
+                        collision detection takes place in each of these subframes, making the game's collision significantly more accurate. All acceleration is applied within each subframe (except friction).
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>Collision Detection</b></span>
+                    <p>
+                        Level data in this game is stored in a large array of "Block" objects, which consisted only of dictionaries that stored the X and Y coordinates of a block, as well as its block type and any other block-specific info;
+                        this may have been the worst way to possibly handle storing levels. Similarly foolishly, the tile collision detection iterates through every Block object in the level array (even ones that are nowhere close to
+                        Jabiveir), doing this every subframe. Oops. In detecting the collision of a single block, the X and Y coordinates of Jabiveir and the block are compared, with 1 pixel of lenience on each side for lava, key, portal,
+                        and flag tiles, and 2 pixels of lenience on each side for the death hitbox of solid red, blue, and purple tiles (color tiles). The order in which block collision is detected is as follows: full block collision, top
+                        of block collision, smaller full block collision (for color tiles), left of block collision, right of block collision, and bottom of block collision. Colliding with the top, left, or right of a block typically sets
+                        Jabiveir's Y or X velocity to zero (and snaps Jabiveir's position to the proper side of the block), but colliding with the bottom of a block sets Y velocity to negative one. The state of red/blue blocks switches
+                        every 128 frames (2.133 seconds at 60 FpS), while purple blocks switch state every 8 frames (0.133 seconds at 60 FpS).
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>Player Movement</b></span>
+                    <p>
+                        When a button is pushed, player movement is changed within each subframe. If the relevant velocity (X for left and right, Y for up) is equal to zero, it is set to a value; otherwise, a smaller value is added to it
+                        within each subframe that the button is held. Because of this, holding the jump button while falling will (slightly) slow Jabiveir's descent, which is very useful in some parts of the game. A quarter of a gravity
+                        constant is subtracted from the Y velocity within each subframe to make Jabiveir fall; friction, however, is applied to X velocity only every frame, and it is applied exponentially (instead of linearly, like normal
+                        acceleration).
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>Level Saving</b></span>
+                    <p>
+                        Game progress is saved through the use of browser cookies. Every time a level is loaded, the cookie is created/updated with the current level, and the Level variable is set to whatever this cookie stored when the
+                        page is loaded. The "wipe save" button sets the Level variable to the first level without changing the cookie, thus allowing for the save wipe to be undone by refreshing the page before loading into the first level,
+                        which would otherwise reset the cookie by storing the first level.
+                    </p>
+                </div>
+                <span button blob id="3C" style="font-size: 36px; user-select: none; display: block;" onclick="Switch(this);"><b>></b> Speedrunning</span>
+                <div blob id="3O" style="display: none;">
+                    <span style="display: block; font-size: 36px; cursor: pointer; user-select: none;" onclick="Switch(this.parentElement);"><b>v</b><span style="position: absolute; left: 44.5px;">Speedrunning</span></span>
+                    <table style="width: 90%; margin: 10px">
+                        <tr>
+                            <th>Run Title & Link</th>
+                            <th>Time</th>
+                            <th>User</th>
+                            <th>Date</th>
+                        </tr>
+                        <tr>
+                            <td><a onclick="Shine('JTARun');" href="#JTARun">First Run</a></td>
+                            <td>13:03.833</td>
+                            <td>Jabiveir</td>
+                            <td>28/08/2024</td>
+                        </tr>
+                    </table>
+                    <span style="font-size: 28px;"><b>History</b></span>
+                    <p>Currently, this game has no speedrunning history, as I am the only person who has submitted a run. I would appreciate it if you tried beating my time!</p>
+                </div>
+                <span button blob id="4C" style="font-size: 36px; user-select: none; display: block;" onclick="Switch(this);"><b>></b> Trivia</span>
+                <div blob id="4O" style="display: none;">
+                    <span style="display: block; font-size: 36px; cursor: pointer; user-select: none;" onclick="Switch(this.parentElement);"><b>v</b><span style="position: absolute; left: 44.5px;">Trivia</span></span>
+                    <p>
+                        -Many parts of this game's programming are laughably inefficient. I would know; I do laugh at them.<br />
+                        -The cookie that saves level progress in this game used to be, unintentionally, the exact same cookie that saved level progress in <a href="./JabiGear.html">JabiGear</a>, which could be used for a <a href="./JabiGearTARunning.html">unique type of speedrun</a>.<br />
+                        -The portal maze level has portals that do not always lead to their partner when entered, and may lead to entirely different portals by mistake. Oops.<br />
+                        -Level 16, the level with lava ceilings above upward boost tiles, took me 2 hours to beat when first playtesting. I do not know why I didn't make it easier.<br />
+                        -Level 17 can very easily be beaten be moving left immediately after Jabiveir spawns in, as there is a tiny window of time in which the flag can be reached. It's so easy that you can even do it accidentally while
+                        you're trying to record a tutorial on how to beat the level normally and then, since there's no way to go back a level, you have to play through the entire game again to try and record it properly.
+                    </p>
+                </div>
+                <span foot style="right: 0;">Page last updated: 16/09/2024</span>
+            </div>
+            <div style="position: absolute; right: 0; top: 0; width: calc(25% - 20px); height: calc(100% - 10px); background-color: #f88; overflow-y: auto; padding-bottom: 10px;">
+                <h1 style="margin: 0; margin-left: 8px; margin-bottom: -5px;">Gallery</h1>
+                <div>
+                    <div file id="JTAWalkthrough">
+                        <video width="100%" controls><source src="./Gal/JTAWalkthrough.mp4" /></video>
+                        <p>This video showcases each level of the game and how to beat it.</p>
+                    </div>
+                </div>
+                <div>
+                    <div file id="JTARun">
+                        <video width="100%" controls><source src="./Gal/JTARun.mp4" /></video>
+                        <p>13:03.833 - Jabiveir, 28/08/2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function Shine(Id) {
+                let str = document.getElementById(Id).parentElement.innerHTML;
+                document.getElementById(Id).parentElement.innerHTML = str;
+                document.getElementById(Id).style.animation = "Boop 1s";
+            }
+            function Switch(El) {
+                El.style.display = "none";
+                let Num = El.id.substring(0, El.id.length - 1);
+                if (El.id.substring(El.id.length - 1) === "C") document.getElementById(Num + "O").style.display = "block";
+                else document.getElementById(Num + "C").style.display = "block";
+            }
+        </script>
+    </body>
+</html>
