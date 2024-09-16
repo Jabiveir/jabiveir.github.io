@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JabiWiki - Jabiveir Quest</title>
+        <meta charset="UTF-8" user-scalable="no" name="viewport" content="width=device-width" />
+        <style>
+            body {
+                overscroll-behavior-block: none;
+            }
+            a[button]:hover span {
+                color: #0d0 !important;
+                cursor: pointer;
+            }
+            [button][blob]:hover {
+                background-color: #eee !important;
+                cursor: pointer;
+            }
+            div[button]:hover {
+                background-color: #eee !important;
+                cursor: pointer;
+            }
+            [blob] {
+                margin-top: 20px;
+                padding: 3px;
+                font-size: 20px;
+                background-color: #fff;
+                border-style: solid;
+                border-width: 2px;
+                box-shadow: 3px 3px #bb0;
+            }
+            [file] {
+                background-color: #fff;
+                padding: 5px;
+                margin: 2%;
+                box-shadow: 4px 4px #800;
+            }
+            [file] img {
+                width: calc(100% - 4px);
+                border: solid 2px;
+            }
+            [foot] {
+                position: absolute;
+                background-color: #fff;
+                border: solid 2px;
+                padding: 3px;
+                top: -3px;
+            }
+            p {
+                margin: 0;
+            }
+            @keyframes Boop {
+                0% {
+                    box-shadow: 4px 4px 4px #0ff, -4px -4px 4px #0ff, 4px -4px 4px #0ff, -4px 4px 4px #0ff;
+                }
+                60% {
+                    box-shadow: 0 0 4px #0ff, 0 0 4px #0ff;
+                }
+                75% {
+                    box-shadow: 0 0 0 #0ff, 0 0 0 #0ff;
+                }
+                100% {
+                    box-shadow: 4px 4px #800;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div style="position: fixed; left: 0; top: 0; width: 100%; height: 53px; background-color: #dfd; border-bottom-style: solid;">
+            <a button href="https://jabiveir.com">
+                <span style="font-size: 45px; position: absolute; right: 7px; top: 3px; color: #0f0; text-shadow: -1px 0 #040, 0 1px #040, 1px 0 #040, 0 -1px #040; user-select: none;"><b>Jabiveir Website</b></span>
+            </a>
+            <a href="./index.html">
+                <div style="color: #000; border-style: solid; border-bottom-color: #ff8; position: fixed; width: 250px; height: 47px; top: 3px; left: 3px; text-align: center; background-color: #ff8;">
+                    <span style="font-size: 40px; user-select: none;">Jabiveir Wiki</span>
+                </div>
+            </a>
+        </div>
+        <div style="position: fixed; left: 0; top: 56px; width: 100%; height: calc(100% - 53px);">
+            <div id="page" style="position: absolute; left: 0; top: 0; width: 75%; height: calc(100% - 20px); background-color: #ff8; padding: 10px; overflow-y: auto;">
+                <p style="font-size: 50px;"><b style="padding: 3px; border-bottom-style: solid;">Jabiveir Quest</b></p>
+                <p blob style="margin-top: 16px;">
+                    Jabiveir Quest is a text-based choose-your-own-adventure game, in which you play as Jabiveir, making decisions that cascade into vastly different endings. This game has 28 endings, in addition to 14 ways to die. While
+                    the paths in the game can be wildly different, the main story revolves around taking down Big Pharma.
+                </p>
+                <span button blob id="1C" style="font-size: 36px; user-select: none; display: block;" onclick="Switch(this);"><b>></b> History</span>
+                <div blob id="1O" style="display: none;">
+                    <span style="display: block; font-size: 36px; cursor: pointer; user-select: none;" onclick="Switch(this.parentElement);"><b>v</b><span style="position: absolute; left: 44.5px;">History</span></span>
+                    <p>
+                        This was the first Jabiveir game ever thought of and developed. As such, it is programatically very simple, using only HTML. All of the paths for the story took around 3 months to map out, beginning on March 15,
+                        2022, and ending sometime in early June. The game, along with the Jabiveir Website itself, were both released on June 17, 2022, unveiled at a small end-of-school party. Despite the release of June 17, the game was
+                        actually finished on (at latest) June 12. Since the HTML pages for this game were so simple, a Python program was used that took the page's writing as input and gave the entire HTML of the page as output.
+                    </p>
+                </div>
+                <span button blob id="2C" style="font-size: 36px; user-select: none; display: block;" onclick="Switch(this);"><b>></b> Endings (SPOILERS)</span>
+                <div blob id="2O" style="display: none;">
+                    <span style="display: block; font-size: 36px; cursor: pointer; user-select: none;" onclick="Switch(this.parentElement);"><b>v</b><span style="position: absolute; left: 44.5px;">Endings (SPOILERS)</span></span>
+                    <p>Jabiveir Quest has 28 endings, including a true ending and a secret ending. This section details each ending and how to obtain it.</p>
+                    <br />
+                    <span style="font-size: 28px;"><b>1 - Jabiveir Enjoys the Day</b></span>
+                    <p>This is the simplest and fastest ending to achieve. Jabiveir simply needs to "stay inside" and then "call in sick to work", after which is the ending.</p>
+                    <br />
+                    <span style="font-size: 28px;"><b>2 - Jabiveir Becomes Illegally Rich</b></span>
+                    <p>
+                        For this ending, Jabiveir must "go outside" and "cross road without looking", getting sent to the hospital. Then, Jabiveir must "ignore hospital bill", get put in prison, and "fight 'Big Bubba'". The Big Bubba fight
+                        is won by using "heal" once (or any odd number of times), then using "attack" until the battle is over. All that's left after the fight, once in solitary confinement, is to "wait" and "start contraband business", at
+                        which point the ending is reached.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>3 - Jabiveir Goes Insane</b></span>
+                    <p>This ending has a very similar path to the previous, ending 2, though the paths differ in that, once in solitary confinement, Jabiveir then chooses to "go insane" (instead of waiting), reaching the ending.</p>
+                    <br />
+                    <span style="font-size: 28px;"><b>4 - Pharmaveir Rules With an Iron Fist</b></span>
+                    <p>
+                        This ending can be achieved from three different paths. In one, the "true ending" (ending 28) path is followed until after Jabiveir tries to engage in "fisticuffs", after which Jabiveir chooses to "heed warning"
+                        about the paradox, leading to the ending. The other two paths are similar, both starting with Jabiveir choosing to "stay inside", "plan to tell boss tomorrow", "get pharmaceutical industry job", and to "do good job".
+                        The paths then differ in choosing to "begin counter-counter-espionage" or "continue working for Big Pharma"; for the former, when finding the BPMTT, Jabiveir must "leave it", then "fight evil Jabiveir", with the
+                        fight being a forced loss, leading to the ending; for the latter, Jabiveir must "rise further through the ranks", becoming Pharmaveir, and then "fight evil jabiveir" (which is forced), with the fight being a forced
+                        win, leading to the ending.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>5 - Jabiveir Accepts Big Pharma</b></span>
+                    <p>
+                        This ending can be achieved from two different paths. In one, Jabiveir must "stay inside", "plan to tell boss tomorrow" about not working, "find a new job", "get pharmaceutical industry job", "do good job", then
+                        "quit job and accept Big Pharma", leading to the ending. The other path involves Jabiveir choosing to "go outside" and "cross road without looking", getting sent to the hospital, then to "ignore hospital bill",
+                        getting sent to prison, "befriend Big Bubba", "meet Big Bubba's prison friends", then either to "have good time with friends" or "plan prison escape" then "bail", at which point Jabiver must "accept Big Pharma" to
+                        reach the ending.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>6 - Many Die, All Lose Hope</b></span>
+                    <p>
+                        This ending involves an organized revolt against Big Pharma, in which many protestors are killed and everyone loses hope. To reach this ending, Jabiveir must "go outside" and "cross road without looking", getting
+                        sent to the hospital, then "ignore hospital bill", getting sent to prison, "befriend Big Bubba", "meet Big Bubba's prison friends", then must either "have good time with friends" or "plan prison escape" then "bail",
+                        at which point Jabiveir needs to "revolt against Big Pharma" to reach the revolt section; then, the ending can be reached by choosing to "revolt with rebels and nonviolence".
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>7 - Revolution Dies Off from Repeated Violence and Death</b></span>
+                    <p>
+                        This ending involves an organized revolt against Big Pharma, in which revolutionaries kill and are killed by Big Pharma members. To reach this ending, the "revolt section" must be reached by following the path for
+                        ending 6 until the choice of how to revolt, at which point Jabiveir must "revolt with rebels and violence", make either choice, then "revolt further with violence", reaching the ending.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>8 - Big Pharma Backs Off (Decent ending)</b></span>
+                    <p>
+                        This ending involves an organized revolt against Big Pharma, in which revolutionaries use violence to make a dent in the industry, then threaten to do more, making Big Pharma back down from doing evil stuff and go
+                        back to simply selling medicine (evilly). The "revolt section" must be reached for this ending by following the path of ending 6 until the choice of how to revolt, at which point Jabiveir must "revolt with rebels and
+                        violence", make either choice, then "revolt further with threats", reaching the ending.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>9 - Literally 1984</b></span>
+                    <p>
+                        This ending is a reference to the novel "1984" by George Orwell, in which one of the departments of the oppressive government is called the "Ministry of Truth". This ending can be reached by choosing to "stay
+                        inside", "plan to tell boss tomorrow" about not working, then to "find a new job", "get a pharmaceutical industry job", and to "do average job", reaching the end.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>10 - Jabiveir Becomes Alex Jones</b></span>
+                    <p>
+                        This ending references Alex Jones, a far-right radio show host that is infamous for being a conspiracy theorist. To reach this ending, Jabiveir must "stay inside", "plan to tell boss tomorrow" about not working,
+                        "find a new job", "become an influencer", and, noticing the pharmaceutical industry's growing power, "make video on it".
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>11 - Jabiveir Has a Failing Social Media Career</b></span>
+                    <p>This ending is reached by following the path of ending 10, but Jabiveir decides "don't make video on it", then chooses to "make educational videos", reaching the end.</p>
+                    <br />
+                    <span style="font-size: 28px;"><b>12 - Jabiveir Becomes Famous Influencer</b></span>
+                    <p>This ending is reached by following the path of ending 10, but Jabiveir decides "don't make video on it", then chooses to "make videos on trending topics", reaching the end.</p>
+                    <br />
+                    <span style="font-size: 28px;"><b>13 - Jabiveir Does a Good Job at Work</b></span>
+                    <p>
+                        There are two ways to reach this ending; the first is a quick and simple path in which Jabiveir simply chooses to "go outside", "look both ways", and "do some work". The second way to get this ending is to "stay
+                        inside", "plan to tell boss tomorrow", "find a new job", "get night shift at local children's restaurant"; from here, Jabiveir may either "close the doors and hide under desk", then, when the criminal breaks in,
+                        "confront them", or "just leave", and then "politely greet them and start a conversation" twice. The latter path is a reference to the popular indie horror game franchise "Five Nights at Freddy's".
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>14 - Jabiveir Goes Bankrupt</b></span>
+                    <p>
+                        This ending is reached by choosing to "go outside", "cross road without looking", and to "pay hospital bill". This is a reference to American healthcare being extremely expensive, although the game is not confirmed
+                        to take place in the U.S.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>15 - Jabiveir Saves the World by Accident</b></span>
+                    <p>
+                        In this ending, Jabiveir inadvertently saves the world by haunting the Big Pharma CEO into resignation, thereby accidentally stopping Big Pharma's eventual takeover. This ending is reached by choosing to "stay
+                        inside", "plan to tell boss tomorrow", "remain unemployed", "rot and wither", becoming a ghost, then to "engage in tomfoolery", "mess with the CEO of the pharmaceutical industry", then choose either option to reach
+                        the end. The final option of "prank call" references an inside joke wherein I posed as Jabiveir to prank call random people, telling them that they had "missed an appointment".
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>16 - Jabiveir Becomes Neighborhood Poltergeist</b></span>
+                    <p>This ending follows the same path as ending 15, but after choosing to "engage in tomfoolery", Jabiveir instead chooses to "haunt local residents".</p>
+                    <br />
+                    <span style="font-size: 28px;"><b>17 - Selfless Jabiveir</b></span>
+                    <p>
+                        This path involves Jabiveir going to prison, and allowing friends to escape during a prison break whilst taking the fall for them. To reach this ending, Jabiveir must "go outside", "cross road without looking",
+                        "ignore hospital bill", "befriend 'Big Bubba'", "meet Big Bubba's prison friends", "Plan prison escape", then "save friends".
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>18 - Jabiveir Lives in a Grocery Store</b></span>
+                    <p>
+                        To reach this ending, Jabiveir must "go outside", "cross road without looking", "ignore hospital bill", "befriend 'Big Bubba'", then "wither and rot", serving a life sentence and getting released from prison to a
+                        post-apocalyptic future; Jabiveir must then simply "find supplies", finding a grocery store.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>19 - THE LOOORE</b></span>
+                    <p>
+                        This ending involves Jabiveir, after serving a life sentence in prison and getting released into a post-apocalyptic world, finding a pharmacy with a locked door that requires a password, the password being obtained
+                        from completing the true ending (ending 28). The incredible plot twists behind this door are so powerful and awesome too that I will not put them here, nor will I put the password itself. To reach the password input
+                        however, Jabiveir must "go outside", "cross road without looking", "ignore hospital bill", "befriend 'Big Bubba'", "wither and rot", then "find shelter". The name of this ending is a reference to Matthew "MatPat"
+                        Patrick, the former host of the "Game Theory" YouTube channels.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>20 - Jabiveir Gets Fired for Letting a Person Break In.</b></span>
+                    <p>
+                        There are two closely-related paths that lead to this ending, both requiring Jabiveir to "stay inside", "plan to tell boss tomorrow", "find a new job", and "get night shift at local children's restaurant"; the first
+                        path then has Jabiveir "close the doors and hide under desk", then "continue cowering", while the other path just uses "denial". In both cases, a person breaks into the establishment, and Jabiveir does not stop them.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>21 - Jabiveir Gets Fired for Setting the Building on Fire.</b></span>
+                    <p>
+                        This path is reached by Jabiveir choosing to "stay inside", "plan to tell boss tomorrow", "find a new job", "get night shift at local children's restaurant", "just leave", "run away", and "kill it with fire". This
+                        path is a reference to popular indie horror franchise "Five Nights at Freddy's", specifically "Five Nights at Freddy's 3".
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>22 - Eternal damnation^2</b></span>
+                    <p>
+                        In this ending, Jabiveir is sent to Double Hell. There are two ways to reach this ending, both having Jabiveir "stay inside", "plan to tell boss tomorrow", "remain unemployed", "rot and wither", and "finish
+                        unfinished business", sending Jabiveir to hell. Once in Hell, Jabiveir may either "fight Satan" or "challenge Satan to a rock-off" then "play 'Tenacious D - Tribute'", both sending Jabiveir to Double Hell. The latter
+                        path is a reference to the movie "Tenacious D in The Pick of Destiny" and, more obviously, "Tribute" by Tenacious D.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>23 - Jabiveir Spends Eternity in Bliss</b></span>
+                    <p>
+                        This ending has Jabiveir allowed to go to Heaven. This path is the same as that of ending 22, but differs after choosing to "challenge Satan to a rock-off", as Jabiveir must "improvise", then "enjoy afterlife in
+                        Heaven". Challenging Satan to a rock-off is a reference to both "Tribute" by Tenacious D and the movie "Tenacious D in The Pick of Destiny".
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>24 - Jabiveir Becomes God (Jehoveir)</b></span>
+                    <p>
+                        This path is the same as that of ending 23, but differs after choosing to "challenge Satan to a rock-off", as Jabiveir must "improvise", then "fight God". God is defeated effortlessly because I didn't wanna try to
+                        come up with a good reason for that. Challenging Satan to a rock-off is a reference to both "Tribute" by Tenacious D and the movie "Tenacious D in The Pick of Destiny".
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>25 - Jabiveir Assists Big Pharma</b></span>
+                    <p>
+                        This ending involves Jabiveir, having a counter-espionage job in Big Pharma, killing a Jabiveir from another timeline. To reach this end, Jabiveir must "stay inside", "plan to tell boss tomorrow", "find a new job",
+                        "get pharmaceutical industry job", "do good job", "continue working for Big Pharma", "keep 'counter-espionage' rank", and kill the other Jabiveir "all sneaky like". The last choices for this path, "guns blazing" or
+                        "all sneaky like", are a reference to the first choice in the YouTube "choose your own adventure" series "A Heist with Markiplier", which was one of the inspirations for this game.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>26 - All Jabiveirs Die and Pharmaveir Rules (Worst ending)</b></span>
+                    <p>
+                        This is the worst ending that can be achieved. It follows the path to the true ending (ending 28) until the final confrontation with Pharmaveir, at which point this ending can technically be achieved in 16 different
+                        ways by choosing the wrong option in the first four attack prompts.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>27 - They Explode and Pharmaveir Lives (Bad ending)</b></span>
+                    <p>
+                        This ending involves failing to deliver the bomb that is intended to kill Pharmaveir, and blowing up the whole party instead. I don't really know why I thought this was a better ending than ending 26. This ending is
+                        reached by following the path to the true ending (ending 28) and choosing the wrong option to deliver the bomb.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>28 - The World Is Saved (True ending)</b></span>
+                    <p>
+                        This is the true ending for the game, and as such, it is tied for the longest path for any ending with ending 27 (which involves failing on the last choice). There are two paths to reach this ending, and they both
+                        start with the choices to "stay inside", "plan to tell boss tomorrow", "find a new job", "get pharmaceutical industry job", and "do good job". The two paths diverge with the first choosing to "begin counter-counter
+                        espionage" and "steal it", then, when fighting the other Jabiveir, "take cover", "make peace", and "coerce Jabiveir to betray Big Pharma", while in the second path, Jabiveir must "continue working for Big Pharma" and
+                        "keep 'counter-espionage' rank", then, when fighting the other Jabiveir, go in "guns blazing" and "hear Jabiveir out", then "agree". After these points, the two paths converge back into the same one, and the two
+                        Jabiveirs must then try a "better idea", use "fisticuffs", say "Screw that!" and fight Pharmaveir. The correct order for using Jabiveirs in the final battle is "Insane Jabiveir", "Poltergeist Jabiveir",
+                        "Counter-espionage Jabiveir", "Scientist Jabiveir", and "Selfless Jabiveir". After this ending is complete, the player is given a password to use for the lore ending (ending 19).
+                    </p>
+                </div>
+                <span button blob id="3C" style="font-size: 36px; user-select: none; display: block;" onclick="Switch(this);"><b>></b> Trivia</span>
+                <div blob id="3O" style="display: none;">
+                    <span style="display: block; font-size: 36px; cursor: pointer; user-select: none;" onclick="Switch(this.parentElement);"><b>v</b><span style="position: absolute; left: 44.5px;">Trivia</span></span>
+                    <p>
+                        -The release date of this game and the Jabiveir Website, June 17, is now known as "Jabiveir Day"<br />
+                        -Despite the simplicity of the game's programming, being entirely HTML, there is still at least one glitch in this game. I'm not going to fix it because I think it's a little funny.<br />
+                        -The maps of the paths in this game were all made with a very convenient browser program called "<a href="https://draw.io">draw.io</a>". The game (thus the entire website) genuinely might not have existed if this program wasn't so convenient to
+                        me.<br />
+                        -In regards to the Python program used to generate the HTML for the game's pages, I am doing the same thing for these Wiki pages, but I'm using Java instead of Python, and it generates the entire file itself
+                        automagically.<br />
+                        -The afterlife in endings 22 through 24 is not the Christian afterlife. Whole different thing.
+                    </p>
+                </div>
+                <span foot style="right: 0;">Page last updated: 16/09/2024</span>
+            </div>
+            <div style="position: absolute; right: 0; top: 0; width: calc(25% - 20px); height: calc(100% - 10px); background-color: #f88; overflow-y: auto; padding-bottom: 10px;">
+                <h1 style="margin: 0; margin-left: 8px; margin-bottom: -5px;">Gallery</h1>
+                <div>
+                    <div file id="JabiveirQuestMain">
+                        <img src="./Gal/JabiveirQuestMain.png" />
+                        <p>
+                            The map of every path of Jabiveir Quest, excluding the paths within purple ovals, as those lead to other images. This map (including other images) was finished before the game was fully written, so some things
+                            may not be entirely accurate to the final game.
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <div file id="JabiveirQuestBPRevolt">
+                        <img src="./Gal/JabiveirQuestBPRevolt.png" />
+                        <p>This is a map of all paths in the "revolt section".</p>
+                    </div>
+                </div>
+                <div>
+                    <div file id="JabiveirQuestEspionageFight">
+                        <img src="./Gal/JabiveirQuestEspionageFight.png" />
+                        <p>A map of the paths in the fight between Espionage Jabiveir and Counter-espionage Jabiveir (from both perspectives).</p>
+                    </div>
+                </div>
+                <div>
+                    <div file id="JabiveirQuestFinalBattle">
+                        <img src="./Gal/JabiveirQuestFinalBattle.png" />
+                        <p>A map of the paths in the final battle of the game.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function Shine(Id) {
+                let str = document.getElementById(Id).parentElement.innerHTML;
+                document.getElementById(Id).parentElement.innerHTML = str;
+                document.getElementById(Id).style.animation = "Boop 1s";
+            }
+            function Switch(El) {
+                El.style.display = "none";
+                let Num = El.id.substring(0, El.id.length - 1);
+                if (El.id.substring(El.id.length - 1) === "C") document.getElementById(Num + "O").style.display = "block";
+                else document.getElementById(Num + "C").style.display = "block";
+            }
+        </script>
+    </body>
+</html>
