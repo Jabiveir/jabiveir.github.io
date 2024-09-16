@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jabiveir Website</title>
+    <style>
+      a {
+        color: #05e
+      }
+      a:active {
+        color: #f00
+      }
+      img[icon] {
+        height: 16px;
+        width: 16px;
+      }
+      div[blob] {
+        margin: 2%;
+        padding: 6px;
+        width: calc(96% - 18px);
+        border: solid;
+        box-shadow: 3px 3px #6b6;
+      }
+    </style>
+  </head>
+  <body style="background-color: #cfc; margin: 0">
+    <div style="position: absolute; width: 98%; height: 72px; margin-left: 1%; text-align: center; border-bottom: solid;">
+      <span style="font-size: 60px; color: #0f0; text-shadow: -1px 0 #040, 0 1px #040, 1px 0 #040, 0 -1px #040;"><b>Jabiveir Website</b></span>
+    </div>
+    <div style="position: absolute; top: 72px; left: 0; width: calc(50% - 1px); height: calc(100% - 75px); border-right: solid; border-top: solid; overflow-y: auto">
+      <div blob style="background-color: #cff;">
+        <span style="font-size: 35px"><b>Jabiveir Games</b></span><br>
+        <span style="font-size: 23px">
+          > <a href="./J:TAR/index.html">Jabiveir: The Adventure Redux</a>
+          <img icon title="This game uses the cookie 'RLevel'." src="./Assets/Cookie.png">
+          <img icon title="This game is mobile compatible." src="./Assets/Mobile.png"><br>
+          > <a href="./Ja:TA2/index.html">Jabiveir: The Adventure 2</a>
+          <img icon title="This game uses the cookie 'MaxLev'." src="./Assets/Cookie.png"><br>
+          > <a href="./Connect4/index.html">Connect 4*</a><br>
+          > <a href="./FNaJ/index.html">Five Nights at Jabiveir's</a>
+          <img icon title="This game uses the cookies 'Night', 'Settings', and 'Custom'." src="./Assets/Cookie.png"><br>
+          > <a href="./J2(1):SV/index.html">JabiGear 2 (1): Solid Veir</a>
+          <img icon title="This game uses the cookie 'JGLevel'." src="./Assets/Cookie.png"><br>
+          > <a href="./J:TA/index.html">Jabiveir: The Adventure</a>
+          <img icon title="This game uses the cookie 'JTALevel'." src="./Assets/Cookie.png">
+          <img icon title="This game contains flashing lights." src="./Assets/Lights.png"><br>
+          > <a href="./JabiveirQuest/JabiveirQuest.html">Jabiveir Quest</a>
+          <img icon title="This game is mobile compatible." src="./Assets/Mobile.png"><br>
+        </span>
+        <span style="font-size: 16px"><a href="./Legacy.html">Legacy page</a></span>
+      </div>
+      <div blob style="background-color: #fc8">
+        <span style="font-size: 35px"><b>Jabiveir Software</b></span><br>
+        <span style="font-size: 23px">
+          Nothing here yet!
+        </span>
+      </div>
+    </div>
+    <div style="position: absolute; top: 72px; right: 0; width: calc(50% - 1px); height: calc(100% - 75px); border-left: solid; border-top: solid; overflow-y: auto">
+      <div blob style="background-color: #faf">
+        <span style="font-size: 35px"><b>Socials & Contact</b></span><br>
+        <span style="font-size: 23px">
+          > JabiChat (W.I.P.)<br>
+          > <a href="./JabiBlog/index.html">JabiBlog</a><br>
+        </span>
+        <span style="font-size: 16px">
+          Contact me at jabiveir2@gmail.com!
+        </span>
+      </div>
+      <div blob style="background-color: #ffa">
+        <span style="font-size: 35px"><b>Jabiveir Wiki</b></span><br>
+        <span style="font-size: 23px">
+          > <a href="./Wiki/JabiveirQuest.html">Jabiveir Quest</a><br>
+          > <a href="./Wiki/JabiveirTheAdventure.html">Jabiveir: The Adventure</a><br>
+          > <a href="./Wiki/JabiGear.html">JabiGear 2 (1): Solid Veir</a><br>
+          More pages to be added soon!
+        </span>
+      </div>
+    </div>
+
+    <div id="error" style="position: fixed; width: 90%; height: 90%; top: 5%; left: 5%; border: solid; background-color: #f00; visibility: hidden;" onclick="this.style.visibility = 'hidden'; window.onresize = '';">
+      <h1>UH OH!</h1>
+      <p>Things are broken at this aspect ratio. If you are on a phone, please rotate it into landscape mode. If you can't adjust your aspect ratio, but want to use the site anyway, simply click/tap this red box.</p>
+    </div>
+    <script>
+      function CheckAR() {
+        if(window.innerWidth < 528) {
+          document.getElementById("error").style.visibility = "visible";
+        } else
+          document.getElementById("error").style.visibility = "hidden";
+      }
+      CheckAR();
+      window.onresize = CheckAR;
+    </script>
+  </body>
+</html>
