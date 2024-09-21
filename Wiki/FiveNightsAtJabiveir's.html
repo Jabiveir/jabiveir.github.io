@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JabiWiki - Five Nights at Jabiveir's</title>
+        <meta charset="UTF-8" user-scalable="no" name="viewport" content="width=device-width" />
+        <style>
+            body {
+                overscroll-behavior-block: none;
+            }
+            a[button]:hover span {
+                color: #0d0 !important;
+                cursor: pointer;
+            }
+            [button][blob]:hover {
+                background-color: #eee !important;
+                cursor: pointer;
+            }
+            div[button]:hover {
+                background-color: #eee !important;
+                cursor: pointer;
+            }
+            [blob] {
+                margin-top: 20px;
+                padding: 3px;
+                font-size: 20px;
+                background-color: #fff;
+                border-style: solid;
+                border-width: 2px;
+                box-shadow: 3px 3px #bb0;
+            }
+            [file] {
+                background-color: #fff;
+                padding: 5px;
+                margin: 2%;
+                box-shadow: 4px 4px #800;
+            }
+            [file] img {
+                width: calc(100% - 4px);
+                border: solid 2px;
+            }
+            [foot] {
+                position: absolute;
+                background-color: #fff;
+                border: solid 2px;
+                padding: 3px;
+                top: -3px;
+            }
+            p {
+                margin: 0;
+            }
+            @keyframes Boop {
+                0% {
+                    box-shadow: 4px 4px 4px #0ff, -4px -4px 4px #0ff, 4px -4px 4px #0ff, -4px 4px 4px #0ff;
+                }
+                60% {
+                    box-shadow: 0 0 4px #0ff, 0 0 4px #0ff;
+                }
+                75% {
+                    box-shadow: 0 0 0 #0ff, 0 0 0 #0ff;
+                }
+                100% {
+                    box-shadow: 4px 4px #800;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div style="position: fixed; left: 0; top: 0; width: 100%; height: 53px; background-color: #dfd; border-bottom-style: solid;">
+            <a button href="https://jabiveir.com">
+                <span style="font-size: 45px; position: absolute; right: 7px; top: 3px; color: #0f0; text-shadow: -1px 0 #040, 0 1px #040, 1px 0 #040, 0 -1px #040; user-select: none;"><b>Jabiveir Website</b></span>
+            </a>
+            <a href="./index.html">
+                <div style="color: #000; border-style: solid; border-bottom-color: #ff8; position: fixed; width: 250px; height: 47px; top: 3px; left: 3px; text-align: center; background-color: #ff8;">
+                    <span style="font-size: 40px; user-select: none;">Jabiveir Wiki</span>
+                </div>
+            </a>
+        </div>
+        <div style="position: fixed; left: 0; top: 56px; width: 100%; height: calc(100% - 53px);">
+            <div id="page" style="position: absolute; left: 0; top: 0; width: 75%; height: calc(100% - 20px); background-color: #ff8; padding: 10px; overflow-y: auto;">
+                <p style="font-size: 50px;"><b style="padding: 3px; border-bottom-style: solid;">Five Nights at Jabiveir's</b></p>
+                <p blob style="margin-top: 16px;">
+                    Five Nights at Jabiveir's, a parody of <a href="https://en.wikipedia.org/wiki/Five_Nights_at_Freddy%27s">Five Nights at Freddy's</a>, is a "horror" game in which the player is tasked with keeping Jabiveir out of the room with a flashlight, as well as managing fear levels and a computer
+                    virus.
+                </p>
+                <span button blob id="1C" style="font-size: 36px; user-select: none; display: block;" onclick="Switch(this);"><b>></b> History</span>
+                <div blob id="1O" style="display: none;">
+                    <span style="display: block; font-size: 36px; cursor: pointer; user-select: none;" onclick="Switch(this.parentElement);"><b>v</b><span style="position: absolute; left: 44.5px;">History</span></span>
+                    <p>
+                        Before any part of the game was programmed, I created all of the necessary art for the game, starting on August 30, 2022; the game's release date is currently unknown, but the latest update (as of writing this) was
+                        on February 17, 2023. This was the fourth Jabiveir game to have been made, and the first to include actual file-imported visuals. The game was originally intended to be a first-person 3D horror game, but I quickly
+                        pivoted after giving up trying to learn Unity.
+                    </p>
+                </div>
+                <span button blob id="2C" style="font-size: 36px; user-select: none; display: block;" onclick="Switch(this);"><b>></b> Mechanics</span>
+                <div blob id="2O" style="display: none;">
+                    <span style="display: block; font-size: 36px; cursor: pointer; user-select: none;" onclick="Switch(this.parentElement);"><b>v</b><span style="position: absolute; left: 44.5px;">Mechanics</span></span>
+                    <p>The goal of the main game is to survive until 6 AM each night. To learn how to do this, press the "How To Play" button. For more specificity, see the sections below (all time-based measurements assume 60 FpS).</p>
+                    <br />
+                    <span style="font-size: 28px;"><b>Survival</b></span>
+                    <p>
+                        There are two primary threats that the player must manage in this game: Jabiveir and fear. Jabiveir is handled by shining the flashlight at the eyes in one of the three areas (the door, the closet, and the window) by
+                        clicking the area; if Jabiveir is not shone with light after 6 seconds (3 seconds with the "Double Jabiveir" challenge), then the player is killed. Fear is managed by looking at the computer to view cute cat videos.
+                        Both of these actions use power, and when power runs out, these actions cannot be performed anymore (usually resulting in death). There are also two secondary threats in this game: hallucinations and the JabiVirus.
+                        Hallucinations appear as the same eyes that indicate Jabiveir, but brighter, and shining your flashlight at them does nothing except waste power and time; when light is shone at Jabiveir, an animation is played of
+                        Jabiveir retreating to hide, which is not played when shining a hallucination. The JabiVirus is a computer virus that has a chance to show up whenever the computer is used; it prevents the player from looking away
+                        from the computer until a number of buttons are pressed in numerical order.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>Difficulty</b></span>
+                    <p>
+                        There are difficulty values for Jabiveir, the JabiVirus, and fear factor. The difficulty value of Jabiveir and the JabiVirus affects the chance for their spawning opportunities to succeed (see next subsection); the
+                        difficulty value for fear factor affects the speed at which the fear meter fills up. For the main game, the difficulty values of fear factor and the JabiVirus are equal to the current night multiplied by 2, while the
+                        difficulty for Jabiveir is the current night multiplied by 2.5. For night 7, the custom night, difficulty values are customizable, with a minimum value of zero (disabling the threat), and with a maximum value of
+                        twenty.
+                    </p>
+                    <br />
+                    <span style="font-size: 28px;"><b>Spawning</b></span>
+                    <p>
+                        In normal gameplay, hallucinations have a spawning opportunity every 3 seconds, Jabiveir has one every 6 seconds (3 seconds with the "Double Jabiveir" challenge), and the JabiVirus has one whenever the computer is
+                        used. A spawning opportunity involves a random chance for Jabiveir, a hallucination, or the JabiVirus to spawn; if this chance succeeds for Jabiveir or a hallucination, another random chance is used to determine in
+                        what area it spawns. For Jabiveir and the JabiVirus, the chance for each spawning opportunity to succeed is proportional to their difficulty level, where there is an additional 5% chance for each level; for a
+                        hallucination, the chance for each spawning opportunity to succeed is proportional to the current fear value, with the percent chance of spawning equal to the percent of the fear meter filled.
+                    </p>
+                </div>
+                <span button blob id="3C" style="font-size: 36px; user-select: none; display: block;" onclick="Switch(this);"><b>></b> Trivia</span>
+                <div blob id="3O" style="display: none;">
+                    <span style="display: block; font-size: 36px; cursor: pointer; user-select: none;" onclick="Switch(this.parentElement);"><b>v</b><span style="position: absolute; left: 44.5px;">Trivia</span></span>
+                    <p>
+                        -All of the art for this game was made in MS Paint.<br />
+                        -Since the spawning opportunity for Jabiveir in the game's code occurs before checking if the player should be killed, and both events occur after the same amount of time, there is a (J*0.05)/3 chance (where J is the
+                        difficulty value of Jabiveir) for a new Jabiveir to spawn directly over the old Jabiveir, resetting the death timer.
+                    </p>
+                </div>
+                <span foot style="right: 0;">Page last updated: 21/09/2024</span>
+            </div>
+            <div style="position: absolute; right: 0; top: 0; width: calc(25% - 20px); height: calc(100% - 10px); background-color: #f88; overflow-y: auto; padding-bottom: 10px;">
+                <h1 style="margin: 0; margin-left: 8px; margin-bottom: -5px;">Gallery</h1>
+                No files :[
+            </div>
+        </div>
+        <script>
+            function Shine(Id) {
+                let str = document.getElementById(Id).parentElement.innerHTML;
+                document.getElementById(Id).parentElement.innerHTML = str;
+                document.getElementById(Id).style.animation = "Boop 1s";
+            }
+            function Switch(El) {
+                El.style.display = "none";
+                let Num = El.id.substring(0, El.id.length - 1);
+                if (El.id.substring(El.id.length - 1) === "C") document.getElementById(Num + "O").style.display = "block";
+                else document.getElementById(Num + "C").style.display = "block";
+            }
+        </script>
+    </body>
+</html>
