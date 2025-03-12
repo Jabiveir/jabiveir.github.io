@@ -29,7 +29,8 @@ def get_flag():
 def main():
   flag = eval(input("Input data: "))
   cypher = unscramble(flag)
-  print(cypher)
+  for i in cypher:
+    print(i, end=" ")
 
 if __name__ == '__main__':
   main()
