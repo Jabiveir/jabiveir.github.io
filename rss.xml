@@ -5,7 +5,11 @@
   <title>Jabiveir Website</title>
   <link>https://jabiveir.com</link>
   <description>Official website for Jabiveir</description>
-
+  <item>
+    <title>JABIVEIR DAY!</title>
+    <link>https://jabiveir.com/JabiBlog/index.html</link>
+    <description>Release of JabiChat, RSS feed support, and future plans!</description>
+  </item>
 </channel>
 
 </rss>
