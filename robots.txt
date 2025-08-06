@@ -4,3 +4,5 @@ Disallow: /Games
 Disallow: /JCV
 
 Disallow: /Secret
+
+Disallow: /JabiveirQuest
