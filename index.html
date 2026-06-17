@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Jabiveir Website</title>
+    <meta name="description" content="My awesome cool website :)"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/x-icon" href="./Assets/Logo.png">
+    <style>
+      h1 {
+        font-size: 28px;
+        margin: 4px;
+        margin-left: 12px;
+        margin-bottom: 0px;
+        font-weight: normal;
+        color: #000;
+      }
+      span {
+        font-size: 18px;
+        color: #000
+      }
+      summary {
+        font-size: 40px;
+        padding-left: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #000;
+      }
+      img[box] {
+        box-shadow: 0 0 0 2px #000,
+                    2px 2px 0 2px rgba(0,0,0,0.25);
+      }
+      span a {
+        margin-left: 20px;
+        color: blue;
+      }
+      span i {
+        font-size: 14px;
+      }
+      a[small] {
+        font-size: 14px;
+        margin-left: 0;
+      }
+      #header {
+        color: #0f0;
+        text-shadow: 0.75px 0 #000,
+                     0 0.75px #000,
+                     -0.75px 0 #000,
+                     0 -0.75px #000;
+        font-size: 48px;
+        margin: 0px;
+        position: absolute;
+        cursor: default;
+      }
+      #games {
+        background-color: #ffb;
+        padding-right: 4px;
+      }
+      #software {
+        background-color: #bff;
+        padding-right: 4px;
+      }
+      #about {
+        background-color: #fbf
+      }
+    </style>
+  </head>
+  <body style="background-color: #dfe; padding: 4px;">
+    <div style="float: left;">
+      <img src="./Assets/Logo.png" style="height:56px;">
+      <span id="header">
+        <b style="margin-left: 10px;">Jabiveir Website</b>
+      </span>
+    </div>
+    <div style="position: absolute; top: 0; right: 0; text-align: right; background-color: #fff; border: solid 2px #000; padding: 8px; padding-top: 4px; padding-bottom: 6px;">
+      <span style="font-size: 14px;">
+        <br>
+        <a href="./devblog.html" style="margin-left: 0;">Development Blog</a><br>
+        <a href="./legacy.html" style="margin-left: 0;">Legacy Page</a>
+      </span>
+    </div>
+    <hr style="width: calc(100% + 6px); left: -4px; position: relative;">
+
+    <details id="games" open>
+      <summary>Games</summary>
+      <span style="margin-left: 20px;"><i>(All games, except those otherwise specified, are browser-based and not mobile-compatible.)</i></span>
+      <hr style="width: calc(100% - 8px);">
+      
+      <div style="min-height: 208px; padding-bottom: 8px;">
+        <img box src="./Assets/JTA2.png" style="float: right; height: 200px; margin: 8px;">
+        <h1>Jabiveir: The Adventure 2</h1>
+        <div style="margin-left: 20px;">
+          <span>A sequel to the first platformer game in the series, Jabiveir: The Adventure, with the same premise; reach the green flags. However, Jabiveir now has a mid-air Dash ability, there are several more unique tiles, and time can be slowed or sped up.<br>
+            Contains 15 main levels (along with a tutorial) and a level creator, from which custom levels can be shared via level codes. Replays of completed levels can also be saved and shared via replay codes.<br>
+            My biggest and finest game yet, in my opinion.
+          </span><br><br>
+          <span><a href="./Games/JTA2/index.html">Play Jabiveir: The Adventure 2</a></span>
+        </div>
+      </div>
+      <hr style="width: calc(100% - 8px);">
+
+      <div style="min-height: 208px; padding-bottom: 8px;">
+        <img box src="./Assets/FNaJ.png" style="float: right; height: 200px; margin: 8px;">
+        <h1>Five Nights at Jabiveir's</h1>
+        <div style="margin-left: 20px;">
+          <span>A parody of Five Nights at Freddy's. In this "horror" game, you must use your flashlight to defend against Jabiveir until 6 AM, all the while managing battery and fear levels.<br>
+            Contains 5 main nights, a secret sixth night, and a seventh customizable night, where difficulties can be set manually. There is also a set of extra challenges and cheats to make the game easier or harder.<br>
+            Features magnificent MS Paint art.
+          </span><br><br>
+          <span><a href="./Games/FNaJ/index.html">Play Five Nights at Jabiveir's</a></span>
+        </div>
+      </div>
+      <hr style="width: calc(100% - 8px);">
+
+      <div style="min-height: 208px; padding-bottom: 8px;">
+        <img box src="./Assets/JG.png" style="float: right; height: 200px; margin: 8px;">
+        <h1>JabiGear 2 (1): Solid Veir</h1>
+        <div style="margin-left: 20px;">
+          <span>A parody of Metal Gear 2: Solid Snake. In this top-down "stealth" game, Jabiveir must weave past enemies and their detection areas to reach the green flags. At the end of the game, Jabiveir can shoot bullets at enemies, aiming with the cursor.<br>
+            Contains a tutorial level for movement, 7 main levels, a tutorial level for shooting, and a final boss level.<br>
+            Was made in just 3 days as a birthday gift, repurposing the J:TA engine.
+          </span><br><br>
+          <span><a href="./Games/JG/index.html">Play JabiGear 2 (1): Solid Veir</a></span>
+        </div>
+      </div>
+      <hr style="width: calc(100% - 8px);">
+
+      <div style="min-height: 208px; padding-bottom: 8px;">
+        <img box src="./Assets/JTA.png" style="float: right; height: 200px; margin: 8px;">
+        <h1>Jabiveir: The Adventure</h1>
+        <div style="margin-left: 20px;">
+          <span>A simple platformer game in which Jabiveir must traverse deadly obstacles to reach the green flags.<br>
+            Contains a tutorial level for movement and 15 main levels.<br>
+            The first game on the site to use JavaScript. Most of the physics logic was ripped straight from Mario 64.
+          </span><br><br>
+          <span><a href="./Games/JTAR/index.html">Play Jabiveir: The Adventure</a></span>
+        </div>
+      </div>
+      <hr style="width: calc(100% - 8px);">
+
+      <div style="min-height: 208px; padding-bottom: 8px;">
+        <img box src="./Assets/C4.png" style="float: right; height: 200px; margin: 8px;">
+        <h1>Connect 4*</h1>
+        <div style="margin-left: 20px;">
+          <span>A simple browser version of Connect 4 with some additional customization, to be played locally on a shared keyboard.<br>
+            Contains basic Connect 4 functionality, plus customization for board size, the connection length required to win, and the number of players, along with a turn timer.<br>
+            Was made at the request of a buddy, and submitted as a final project in a Computer Science A class.
+          </span><br><br>
+          <span><a href="./Games/Connect4/index.html">Play Connect 4*</a></span>
+        </div>
+      </div>
+      <hr style="width: calc(100% - 8px);">
+
+      <div style="min-height: 208px; padding-bottom: 8px;">
+        <img box src="./Assets/JQ.png" style="float: right; height: 200px; margin: 8px;">
+        <h1>Jabiveir Quest</h1>
+        <div style="margin-left: 20px;">
+          <span><i>(Mobile-compatible)</i></span><br>
+          <span>A very simple text-based choose-your-own-adventure game following Jabiveir's day, and perhaps uncovering an evil scheme.<br>
+            Choices are made by following hyperlinks to reach different pages. Contains 28 possible endings and 14 possible ways to die.<br>
+            This was the first game I ever made for the website, so please excuse the poor writing.
+          </span><br><br>
+          <span><a href="./JabiveirQuest/index.html">Play Jabiveir Quest</a></span>
+        </div>
+      </div>
+      <!-- <hr style="width: calc(100% - 8px);">
+      WIP!!
+      <div style="padding: 16px;"><span><a style="margin-left: 0;" href="./gamedownloads.html">Downloads and previous versions</a></span></div> !-->
+    </details>
+
+    <details id="software" open>
+      <summary>Software</summary>
+      <hr style="width: calc(100% - 8px);">
+      
+      <div style="min-height: 208px; padding-bottom: 8px;">
+        <img box src="./Assets/JabiChat.png" style="float: right; height: 200px; margin: 8px;">
+        <h1>JabiChat</h1>
+        <div style="margin-left: 20px;">
+          <span>A simple, self-hosted, browser-based messaging app. Create a chatroom, invite friends, and talk!<br>
+            Supports HTML formatting for messages, (non-stored) file sharing, pinging users, editing/deleting messages, et cetera. Requires SQL and NodeJS for the host to run the server, as well as port-forwarding if users are not on LAN. Guides for hosting and using the app are included.<br>
+            <b>WARNING: This program has basically ZERO security (currently)!! Do not send any sensitive information over this app!</b><br>
+            This took forever to make, and is still not very good, but I'm proud of it.
+          </span><br><br>
+          <span><a href="./JC/JCv0-9.zip">Download server files to host</a></span>
+        </div>
+      </div>
+      <hr style="width: calc(100% - 8px);">
+      <div style="padding: 20px;"><span>More software will be added in the future. Hopefully.</span></div>
+    </details>
+
+    <div id="about" style="padding: 8px; margin-bottom: 100px;">
+      <span><b>About</b><br>
+        This website was started on June 17th, 2022 (now known as Jabiveir Day), purely to host Jabiveir Quest, because I wanted to make a fun, simple, browser-based game for my friends. Since then, I have continued making games and other projects for fun, and I host them here. Everything on this site, unless directly stated otherwise, was made entirely by me from scratch, using mostly self-taught programming knowledge.
+      </span>
+    </div>
+
+    <img src="./Assets/Urger.jpg" style="position: absolute; bottom: -500%; left: 0; height: 400px;">
+  </body>
+</html>
