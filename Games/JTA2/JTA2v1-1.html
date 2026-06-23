@@ -1,0 +1,2896 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Jabiveir: The Adventure 2</title>
+    <meta charset="UTF-8" />
+  	<meta name="robots" content="none">
+    <style>
+      #GameScreen {
+        border: 2px solid black;
+        width: 720;
+        height: 552;
+        position: fixed;
+        left: 0;
+        top: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas id="GameScreen" width="720" height="552"></canvas>
+    
+    <script type="module">
+      class fullscreen {
+        constructor(Canvas, Ctx, Buttons, Menu, Keybinds, PData, Level) {
+          this.Update(Ctx, Buttons, Menu, Keybinds, PData, Level);
+          let Full = this;
+          Canvas.height = Math.min(
+            window.innerHeight - 54,
+            ((window.innerWidth - 4) * 23) / 30
+          );
+          Canvas.width = Math.min(
+            window.innerWidth - 4,
+            ((window.innerHeight - 54) * 30) / 23
+          );
+          Ctx.scale(Canvas.width / 720, Canvas.height / 552);
+          window.onresize = function () {
+            Canvas.height = Math.min(
+              window.innerHeight - 54,
+              ((window.innerWidth - 4) * 23) / 30
+            );
+            Canvas.width = Math.min(
+              window.innerWidth - 4,
+              ((window.innerHeight - 54) * 30) / 23
+            );
+            Ctx.scale(Canvas.width / 720, Canvas.height / 552);
+            Full.Update(Ctx, Buttons, Menu, Keybinds, PData, Level);
+          };
+        }
+        Update(Ctx, Buttons, Menu, Keybinds, PData, Level) {
+          Ctx.clearRect(0, 0, 720, 552);
+          Menu.Update(Ctx, Buttons.MenuVar, Keybinds, PData, Level);
+          Buttons.Draw(Ctx);
+        }
+      };
+
+      class buttons {
+        constructor(Canvas, Keybinds) {
+          this.Buttons = [];
+          this.MenuVar = 0;
+          var But = this;
+          Canvas.addEventListener("click", function fn(event) {
+            for (let i = 0; i < But.Buttons.length; i++) {
+              let B = But.Buttons[i];
+              let X = (event.offsetX / Canvas.width) * 720;
+              let Y = (event.offsetY / Canvas.height) * 552;
+              let Show = false;
+              for (let j = 0; j < B.MenuShow.length; j++)
+                Show = Show || But.MenuVar === B.MenuShow[j];
+              if (Show) {
+                if (X >= B.X && X <= B.X + B.W && Y >= B.Y && Y <= B.Y + B.H) {
+                  But.MenuVar = B.MenuGoal;
+                  i = But.Buttons.length;
+                  B.Fun();
+                }
+              }
+            }
+          });
+        }
+        New(Dict) {
+          this.Buttons.push(Dict);
+        }
+        Draw(Ctx) {
+          for (let i = 0; i < this.Buttons.length; i++) {
+            let B = this.Buttons[i];
+            let Show = false;
+            for (let j = 0; j < B.MenuShow.length; j++)
+              Show = Show || this.MenuVar === B.MenuShow[j];
+            if (Show) {
+              if (B.Opacity !== 1) Ctx.globalAlpha = B.Opacity;
+              Ctx.fillStyle = B.BorderColor || "#000";
+              Ctx.fillRect(B.X, B.Y, B.W, B.H);
+              Ctx.fillStyle = B.FillColor || "#fff";
+              Ctx.fillRect(
+                B.X + (B.Thick || 2),
+                B.Y + (B.Thick || 2),
+                B.W - 2 * (B.Thick || 2),
+                B.H - 2 * (B.Thick || 2)
+              );
+              Ctx.fillStyle = B.TextColor || "#000";
+              Ctx.font = B.FontSize + "px sans-serif";
+              Ctx.textAlign = "center";
+              Ctx.fillText(
+                B.Text || "",
+                B.X + B.W / 2,
+                B.Y + B.H / 2 + B.FontSize / 3,
+                B.W - 10
+              );
+              B.Disp(Ctx);
+              Ctx.globalAlpha = 1;
+            }
+          }
+        }
+      };
+
+      class menu {
+        Update(Ctx, MenuVar, Keybinds, PData, Level) {
+          Ctx.fillStyle = "#000";
+          Ctx.textAlign = "center";
+          if (MenuVar === -4) {
+            Ctx.font = "80px sans-serif";
+            Ctx.fillText("Replay finished!", 360, 110);
+            Ctx.font = "40px sans-serif";
+            let Time = PData.RealTime;
+            let Sec = Math.floor((Time / 60) * 1000) % 60000;
+            if (Sec < 10000) Sec = "0" + Sec;
+            Sec += "";
+            Sec = Sec.substring(0, 2) + "." + Sec.substring(2);
+            let Min = Math.floor(Time / 60 / 60) % 60;
+            if (Min < 10) Min = "0" + Min;
+            let Hr = Math.floor(Time / 60 / 60 / 60);
+            if (Hr < 10) Hr = "0" + Hr;
+            Ctx.fillText("It took " + Hr + ":" + Min + ":" + Sec, 360, 170);
+            Ctx.fillText("and " + PData.Attempts + " attempts!", 360, 215);
+          } else if (MenuVar === -3) {
+            PData.ReplayTime = 0;
+            Ctx.font = "80px sans-serif";
+            Ctx.fillText("You win!", 360, 110);
+            Ctx.font = "40px sans-serif";
+            let Time = PData.RealTime;
+            if (PData.Mode === "Normal") Time = PData.TotalTime;
+            let Sec = Math.floor((Time / 60) * 1000) % 60000;
+            if (Sec < 10000) Sec = "0" + Sec;
+            Sec += "";
+            Sec = Sec.substring(0, 2) + "." + Sec.substring(2);
+            let Min = Math.floor(Time / 60 / 60) % 60;
+            if (Min < 10) Min = "0" + Min;
+            let Hr = Math.floor(Time / 60 / 60 / 60);
+            if (Hr < 10) Hr = "0" + Hr;
+            let StrTime = Hr + ":" + Min + ":" + Sec;
+            if (PData.Level === 16 && PData.StartLevel === 1 && !PData.SingSeg) {
+              if (Time < PData.S.BestFrames || PData.S.BestFrames === 0) {
+                PData.S.BestFrames = Time;
+                PData.S.BestNormalTime = StrTime;
+              }
+              let Temp = true;
+              for (
+                let i = 120;
+                i < PData.CurrentReplay.length && Temp && !PData.S.BeatLevelFast;
+                i++
+              )
+                Temp = Temp && Level.Decompress(PData.CurrentReplay[i]) % 3 === 2;
+              PData.S.BeatLevelFast = Temp || PData.S.BeatLevelFast;
+            }
+            Ctx.fillText("It took " + StrTime, 360, 160);
+            Ctx.fillText("and " + PData.Attempts + " attempts!", 360, 205);
+          } else if (MenuVar === -2) {
+            Ctx.fillStyle = "#000";
+            Ctx.fillRect(0, 0, 720, 72);
+            Ctx.fillStyle = "#ccc";
+            for (let i = 1; i < 30; i++) {
+              Ctx.fillRect(24 * i - 1, 72, 2, 480);
+              Ctx.fillRect(0, 71 + 24 * i, 720, 2);
+            }
+            for (let i = 0; i < 600; i++) {
+              while (PData.CustomList[i] === 0) i++;
+              if (i >= 600) continue;
+              let X = (i % 30) * 24;
+              let Y = Math.floor(i / 30) * 24;
+              if (PData.CustomList[i] === 1) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+              } else if (PData.CustomList[i] === 2) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 4);
+              } else if (PData.CustomList[i] === 3) {
+                Ctx.fillStyle = "#f00";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#f80";
+                Ctx.fillRect(X + 2, Y + 74, 8, 8);
+                Ctx.fillRect(X + 4, Y + 86, 8, 8);
+                Ctx.fillRect(X + 14, Y + 78, 8, 8);
+                Ctx.fillStyle = "#ff0";
+                Ctx.fillRect(X + 4, Y + 76, 4, 4);
+                Ctx.fillRect(X + 6, Y + 88, 4, 4);
+                Ctx.fillRect(X + 16, Y + 80, 4, 4);
+              } else if (PData.CustomList[i] === 4) {
+                Ctx.fillStyle = "#f00";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#c11";
+                Ctx.fillRect(X + 6, Y + 78, 12, 12);
+              } else if (PData.CustomList[i] === 5) {
+                Ctx.fillStyle = "#11c";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#66f";
+                Ctx.fillRect(X + 6, Y + 78, 12, 12);
+              } else if (PData.CustomList[i] === 6) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#0ff";
+                Ctx.fillRect(X + 2, Y + 74, 20, 20);
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X + 8, Y + 84, 8, 8);
+                for (let i = 0; i < 8; i++)
+                  Ctx.fillRect(X + 11 - i, Y + 76 + i, 2 * (i + 1), 2);
+              } else if (PData.CustomList[i] === 7) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#0ff";
+                Ctx.fillRect(X + 2, Y + 74, 20, 20);
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X + 12, Y + 80, 8, 8);
+                for (let i = 0; i < 8; i++)
+                  Ctx.fillRect(X + 11 - i, Y + 76 + i, 2, 2 * (8 - i));
+              } else if (PData.CustomList[i] === 8) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#0ff";
+                Ctx.fillRect(X + 2, Y + 74, 20, 20);
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X + 4, Y + 80, 8, 8);
+                for (let i = 0; i < 8; i++)
+                  Ctx.fillRect(X + 11 + i, Y + 76 + i, 2, 2 * (8 - i));
+              } else if (PData.CustomList[i] === 9) {
+                Ctx.fillStyle = "#cc0";
+                Ctx.fillRect(X, Y + 78, 12, 12);
+                Ctx.fillRect(X + 12, Y + 82, 12, 4);
+                Ctx.fillRect(X + 15, Y + 86, 3, 4);
+                Ctx.fillRect(X + 21, Y + 86, 3, 4);
+                Ctx.fillStyle = "#f00";
+                Ctx.fillRect(X + 3, Y + 81, 6, 6);
+              } else if (PData.CustomList[i] === 10) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X + 2, Y + 74, 13, 13);
+                Ctx.fillRect(X + 9, Y + 81, 13, 13);
+                Ctx.fillStyle = "#0c0";
+                Ctx.fillRect(X + 4, Y + 76, 9, 9);
+                Ctx.clearRect(X + 6, Y + 78, 5, 5);
+                Ctx.fillRect(X + 8, Y + 80, 4, 4);
+                Ctx.fillStyle = "#f00";
+                Ctx.fillRect(X + 11, Y + 83, 9, 9);
+                Ctx.clearRect(X + 13, Y + 85, 5, 5);
+                Ctx.fillRect(X + 12, Y + 84, 4, 4);
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X + 9, Y + 81, 6, 6);
+              } else if (PData.CustomList[i] === 11) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X + 1, Y + 83, 22, 2);
+                for (let i = 1; i <= 5; i++) {
+                  Ctx.fillRect(X + 12 - 2 * i, Y + 71 + 2 * i, 4 * i, 3);
+                  Ctx.fillRect(X + 12 - 2 * i, Y + 94 - 2 * i, 4 * i, 3);
+                }
+                for (let i = 1; i <= 4; i++) {
+                  Ctx.fillStyle = "#f00";
+                  Ctx.fillRect(X + 12 - 2 * (i - 1), Y + 93 - 2 * i, 4 * (i - 1), 3);
+                  Ctx.fillStyle = "#0c0";
+                  Ctx.fillRect(X + 12 - 2 * (i - 1), Y + 72 + 2 * i, 4 * (i - 1), 3);
+                }
+              } else if (PData.CustomList[i] === 12) {
+                Ctx.fillStyle = "#04f";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#08f";
+                Ctx.fillRect(X + 4, Y + 82, 16, 4);
+              } else if (PData.CustomList[i] === 13) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#4ff";
+                Ctx.fillRect(X + 2, Y + 74, 20, 20);
+                Ctx.clearRect(X + 8, Y + 80, 8, 8);
+                Ctx.clearRect(X + 10, Y + 77, 4, 14);
+                Ctx.clearRect(X + 5, Y + 82, 14, 4);
+              } else if (PData.CustomList[i] === 14) {
+                Ctx.fillStyle = "#fb0";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#ff0";
+                Ctx.fillRect(X + 4, Y + 76, 16, 16);
+              } else if (PData.CustomList[i] === 15) {
+                Ctx.fillStyle = "#840";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#c80";
+                Ctx.fillRect(X + 3, Y + 75, 18, 18);
+              } else if (PData.CustomList[i] >= 10000) {
+                let ExitX = (Math.floor(PData.CustomList[i] / 100) % 100) * 24;
+                let ExitY = (PData.CustomList[i] % 100) * 24;
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.clearRect(X + 2, Y + 74, 20, 20);
+                Ctx.fillRect(X + 4, Y + 76, 16, 16);
+                Ctx.clearRect(X + 6, Y + 78, 12, 12);
+                Ctx.fillRect(X + 8, Y + 80, 8, 8);
+                Ctx.clearRect(X + 10, Y + 82, 4, 4);
+                if (PData.CustomList[i] >= 20000) {
+                  Ctx.clearRect(X + 7, Y + 75, 10, 10);
+                  Ctx.clearRect(X + 9, Y + 84, 6, 10);
+                  Ctx.fillRect(X + 8, Y + 76, 8, 8);
+                  Ctx.fillRect(X + 10, Y + 84, 4, 8);
+                }
+                Ctx.strokeStyle = "#888";
+                Ctx.strokeRect(ExitX, ExitY + 72, 24, 24);
+                Ctx.strokeRect(ExitX + 4, ExitY + 76, 16, 16);
+                Ctx.strokeRect(ExitX + 8, ExitY + 80, 8, 8);
+              }
+            }
+            Ctx.fillStyle = "#0f0";
+            Ctx.fillRect(26, 508, 20, 20);
+            Ctx.fillRect(676, 507, 16, 12);
+            Ctx.fillStyle = "#080";
+            Ctx.fillRect(676, 506, 4, 20);
+          } else if (MenuVar === -1) {
+            for (let i = 0; i < 600; i++) {
+              while (PData.NumList[i] === 0) i++;
+              if (i >= 600) continue;
+              let X = (i % 30) * 24;
+              let Y = Math.floor(i / 30) * 24;
+              if (PData.NumList[i] === 1) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+              } else if (PData.NumList[i] === 2) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 4);
+              } else if (PData.NumList[i] === 3) {
+                Ctx.fillStyle = "#f00";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#f80";
+                Ctx.fillRect(X + 2, Y + 74, 8, 8);
+                Ctx.fillRect(X + 4, Y + 86, 8, 8);
+                Ctx.fillRect(X + 14, Y + 78, 8, 8);
+                Ctx.fillStyle = "#ff0";
+                Ctx.fillRect(X + 4, Y + 76, 4, 4);
+                Ctx.fillRect(X + 6, Y + 88, 4, 4);
+                Ctx.fillRect(X + 16, Y + 80, 4, 4);
+              } else if (PData.NumList[i] === 4) {
+                if (PData.Time % 240 < 120) {
+                  Ctx.fillStyle = "#f00";
+                  Ctx.fillRect(X, Y + 72, 24, 24);
+                  Ctx.fillStyle = "#c11";
+                  Ctx.fillRect(X + 6, Y + 78, 12, 12);
+                } else {
+                  Ctx.fillStyle = "#f00";
+                  Ctx.fillRect(X, Y + 72, 24, 24);
+                  Ctx.clearRect(X + 2, Y + 74, 20, 20);
+                }
+              } else if (PData.NumList[i] === 5) {
+                if (PData.Time % 240 >= 120) {
+                  Ctx.fillStyle = "#11c";
+                  Ctx.fillRect(X, Y + 72, 24, 24);
+                  Ctx.fillStyle = "#66f";
+                  Ctx.fillRect(X + 6, Y + 78, 12, 12);
+                } else {
+                  Ctx.fillStyle = "#11c";
+                  Ctx.fillRect(X, Y + 72, 24, 24);
+                  Ctx.clearRect(X + 2, Y + 74, 20, 20);
+                }
+              } else if (PData.NumList[i] === 6) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#0ff";
+                Ctx.fillRect(X + 2, Y + 74, 20, 20);
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X + 8, Y + 84, 8, 8);
+                for (let i = 0; i < 8; i++)
+                  Ctx.fillRect(X + 11 - i, Y + 76 + i, 2 * (i + 1), 2);
+              } else if (PData.NumList[i] === 7) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#0ff";
+                Ctx.fillRect(X + 2, Y + 74, 20, 20);
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X + 12, Y + 80, 8, 8);
+                for (let i = 0; i < 8; i++)
+                  Ctx.fillRect(X + 11 - i, Y + 76 + i, 2, 2 * (8 - i));
+              } else if (PData.NumList[i] === 8) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#0ff";
+                Ctx.fillRect(X + 2, Y + 74, 20, 20);
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X + 4, Y + 80, 8, 8);
+                for (let i = 0; i < 8; i++)
+                  Ctx.fillRect(X + 11 + i, Y + 76 + i, 2, 2 * (8 - i));
+              } else if (PData.NumList[i] === 9) {
+                Ctx.fillStyle = "#cc0";
+                Ctx.fillRect(X, Y + 78, 12, 12);
+                Ctx.fillRect(X + 12, Y + 82, 12, 4);
+                Ctx.fillRect(X + 15, Y + 86, 3, 4);
+                Ctx.fillRect(X + 21, Y + 86, 3, 4);
+                Ctx.fillStyle = "#f00";
+                Ctx.fillRect(X + 3, Y + 81, 6, 6);
+              } else if (PData.NumList[i] === 10) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X + 2, Y + 74, 13, 13);
+                Ctx.fillRect(X + 9, Y + 81, 13, 13);
+                Ctx.fillStyle = "#0c0";
+                Ctx.fillRect(X + 4, Y + 76, 9, 9);
+                Ctx.clearRect(X + 6, Y + 78, 5, 5);
+                Ctx.fillRect(X + 8, Y + 80, 4, 4);
+                Ctx.fillStyle = "#f00";
+                Ctx.fillRect(X + 11, Y + 83, 9, 9);
+                Ctx.clearRect(X + 13, Y + 85, 5, 5);
+                Ctx.fillRect(X + 12, Y + 84, 4, 4);
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X + 9, Y + 81, 6, 6);
+              } else if (PData.NumList[i] === 11) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X + 1, Y + 83, 22, 2);
+                for (let i = 1; i <= 5; i++) {
+                  Ctx.fillRect(X + 12 - 2 * i, Y + 71 + 2 * i, 4 * i, 3);
+                  Ctx.fillRect(X + 12 - 2 * i, Y + 94 - 2 * i, 4 * i, 3);
+                }
+                for (let i = 1; i <= 4; i++) {
+                  Ctx.fillStyle = "#f00";
+                  Ctx.fillRect(X + 12 - 2 * (i - 1), Y + 93 - 2 * i, 4 * (i - 1), 3);
+                  Ctx.fillStyle = "#0c0";
+                  Ctx.fillRect(X + 12 - 2 * (i - 1), Y + 72 + 2 * i, 4 * (i - 1), 3);
+                }
+              } else if (PData.NumList[i] === 12) {
+                Ctx.fillStyle = "#04f";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#08f";
+                Ctx.fillRect(X + 4, Y + 82, 16, 4);
+              } else if (PData.NumList[i] === 13) {
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#4ff";
+                Ctx.fillRect(X + 2, Y + 74, 20, 20);
+                Ctx.clearRect(X + 8, Y + 80, 8, 8);
+                Ctx.clearRect(X + 10, Y + 77, 4, 14);
+                Ctx.clearRect(X + 5, Y + 82, 14, 4);
+              } else if (PData.NumList[i] === 14) {
+                Ctx.fillStyle = "#fb0";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#ff0";
+                Ctx.fillRect(X + 4, Y + 76, 16, 16);
+              } else if (PData.NumList[i] === 15) {
+                Ctx.fillStyle = "#840";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.fillStyle = "#c80";
+                Ctx.fillRect(X + 3, Y + 75, 18, 18);
+              } else if (PData.NumList[i] >= 10000) {
+                let ExitX = (Math.floor(PData.NumList[i] / 100) % 100) * 24;
+                let ExitY = (PData.NumList[i] % 100) * 24;
+                Ctx.fillStyle = "#000";
+                Ctx.fillRect(X, Y + 72, 24, 24);
+                Ctx.clearRect(X + 2, Y + 74, 20, 20);
+                Ctx.fillRect(X + 4, Y + 76, 16, 16);
+                Ctx.clearRect(X + 6, Y + 78, 12, 12);
+                Ctx.fillRect(X + 8, Y + 80, 8, 8);
+                Ctx.clearRect(X + 10, Y + 82, 4, 4);
+                if (PData.NumList[i] >= 20000) {
+                  Ctx.clearRect(X + 7, Y + 75, 10, 10);
+                  Ctx.clearRect(X + 9, Y + 84, 6, 10);
+                  Ctx.fillRect(X + 8, Y + 76, 8, 8);
+                  Ctx.fillRect(X + 10, Y + 84, 4, 8);
+                }
+                Ctx.strokeStyle = "#888";
+                Ctx.strokeRect(ExitX, ExitY + 72, 24, 24);
+                Ctx.strokeRect(ExitX + 4, ExitY + 76, 16, 16);
+                Ctx.strokeRect(ExitX + 8, ExitY + 80, 8, 8);
+              }
+            }
+            if (PData.Level === 101) {
+              Ctx.fillStyle = "#000";
+              Ctx.font = "20px sans-serif";
+              Ctx.fillText(
+                "Use " + Keybinds.Left + " and " + Keybinds.Right + " to move left",
+                130,
+                400
+              );
+              Ctx.fillText(
+                "and right and hold " + Keybinds.Jump + " to jump",
+                130,
+                425
+              );
+              Ctx.fillText(
+                "Use " +
+                  Keybinds.Dash +
+                  " with " +
+                  Keybinds.Jump +
+                  ", " +
+                  Keybinds.Left +
+                  ", " +
+                  Keybinds.Right +
+                  ", or " +
+                  Keybinds.Down,
+                330,
+                285
+              );
+              Ctx.fillText("to dash in the air", 330, 310);
+              Ctx.fillText("(gains most height at", 330, 335);
+              Ctx.fillText("the peak of the jump)", 330, 360);
+              Ctx.fillText(
+                "You can also use " +
+                  Keybinds.PlayerSlow +
+                  " and " +
+                  Keybinds.PlayerFast +
+                  " to slow",
+                445,
+                510
+              );
+              Ctx.fillText("down and speed up time, respectively", 445, 535);
+            } else if (PData.Level === 102) {
+              Ctx.fillStyle = "#000";
+              Ctx.font = "20px sans-serif";
+              Ctx.fillText("Don't touch lava or fall into pits!", 270, 480);
+              Ctx.fillText("Dashing can get you very far!", 285, 350);
+            } else if (PData.Level === 103) {
+              Ctx.fillStyle = "#000";
+              Ctx.font = "20px sans-serif";
+              Ctx.fillText("The Dash Switch toggles if you can dash!", 330, 525);
+              Ctx.fillText("Red/Blue Blocks toggle their tangibility!", 200, 120);
+            } else if (PData.Level === 104) {
+              Ctx.fillStyle = "#000";
+              Ctx.font = "20px sans-serif";
+              Ctx.fillText("Boost blocks boost you in their direction!", 330, 500);
+              Ctx.fillText("Crates break when quickly ran into!", 455, 405);
+              Ctx.fillText("Honey blocks are too sticky to jump on,", 290, 295);
+              Ctx.fillText("but you cling to the bottom of Up Boosts!", 290, 320);
+            } else if (PData.Level === 105) {
+              Ctx.fillStyle = "#000";
+              Ctx.font = "20px sans-serif";
+              Ctx.fillText("Gravity Switches reverse gravity!", 210, 522);
+              Ctx.fillText(
+                "Press " + Keybinds.Down + " to jump in reversed gravity!",
+                230,
+                94
+              );
+              Ctx.fillText("Be careful, ice is slippery!", 360, 322);
+            } else if (PData.Level === 106) {
+              Ctx.fillStyle = "#000";
+              Ctx.font = "20px sans-serif";
+              Ctx.fillText("Portals can teleport you!", 117, 488);
+              Ctx.fillText("They can be one-way or go both ways!", 442, 488);
+              Ctx.fillText("It keeps momentum too!", 120, 112);
+              Ctx.fillText("They can also be used to generate", 445, 102);
+              Ctx.fillText("enough speed to clip through blocks!", 445, 125);
+              Ctx.fillStyle = "#fff";
+              Ctx.fillText("You can float through Water Blocks!", 445, 400);
+            }
+            Ctx.fillStyle = "#0f0";
+            if (!PData.Dead && PData.M.Dash) {
+              Ctx.fillRect(PData.M.X, PData.M.Y + 72, 20, 20);
+              if (PData.Keys > 0) {
+                Ctx.fillStyle = "#cc0";
+                Ctx.fillRect(PData.M.X, PData.M.Y + 77, 10, 10);
+                Ctx.fillRect(PData.M.X + 10, PData.M.Y + 72 + 22 / 3, 10, 10 / 3);
+                Ctx.fillRect(PData.M.X + 12.5, PData.M.Y + 72 + 32 / 3, 2.5, 10 / 3);
+                Ctx.fillRect(PData.M.X + 17.5, PData.M.Y + 72 + 32 / 3, 2.5, 10 / 3);
+                Ctx.fillStyle = "#f00";
+                Ctx.fillRect(PData.M.X + 2.5, PData.M.Y + 79.5, 5, 5);
+                Ctx.fillStyle = "#0f0";
+              }
+            }
+            Ctx.fillRect(676, 507, 16, 12);
+            Ctx.fillStyle = "#0c0";
+            if (!PData.Dead && !PData.M.Dash) {
+              Ctx.fillRect(PData.M.X, PData.M.Y + 72, 20, 20);
+              if (PData.Keys > 0) {
+                Ctx.fillStyle = "#cc0";
+                Ctx.fillRect(PData.M.X, PData.M.Y + 77, 10, 10);
+                Ctx.fillRect(PData.M.X + 10, PData.M.Y + 72 + 22 / 3, 10, 10 / 3);
+                Ctx.fillRect(PData.M.X + 12.5, PData.M.Y + 72 + 32 / 3, 2.5, 10 / 3);
+                Ctx.fillRect(PData.M.X + 17.5, PData.M.Y + 72 + 32 / 3, 2.5, 10 / 3);
+                Ctx.fillStyle = "#f00";
+                Ctx.fillRect(PData.M.X + 2.5, PData.M.Y + 79.5, 5, 5);
+                Ctx.fillStyle = "#0f0";
+              }
+            }
+            Ctx.fillStyle = "#080";
+            Ctx.fillRect(676, 506, 4, 20);
+            if (PData.Mode === "Custom") Ctx.fillStyle = "#048";
+            else if (PData.Mode === "Replay") Ctx.fillStyle = "#600";
+            else Ctx.fillStyle = "#000";
+            Ctx.fillRect(0, 0, 720, 72);
+            Ctx.fillStyle = "#fff";
+            Ctx.font = "40px sans-serif";
+            let Str = Math.floor(PData.TimeSpeed % 10) + ".";
+            Str += Math.floor(PData.TimeSpeed * 10) % 10;
+            Str += Math.floor(PData.TimeSpeed * 100) % 10;
+            Ctx.fillText(Str, 190, 49);
+            if (PData.Level > 0 && PData.Level < 16) Str = PData.Level + "/15";
+            else if (PData.Level > 100 && PData.Level < 107)
+              Str = PData.Level - 100 + "/6";
+            else Str = "1/1";
+            Ctx.fillText(Str, 290, 49);
+            Ctx.fillStyle = "#cc0";
+            Ctx.fillRect(115, 21, 30, 30);
+            Ctx.clearRect(120, 26, 20, 20);
+            Ctx.fillStyle = "#000";
+            Ctx.fillRect(128, 26, 4, 10);
+            Ctx.fillRect(128, 34, 9, 4);
+          } else if (MenuVar === 0) {
+            Ctx.textAlign = "center";
+            Ctx.fillStyle = "#000";
+            Ctx.font = "60px sans-serif";
+            Ctx.fillText("Jabiveir: The Adventure 2", 360, 150, 720);
+            Ctx.font = "30px sans-serif";
+            Ctx.textAlign = "left";
+            Ctx.fillText("Version 1.1", 7, 545);
+          } else if (MenuVar === 1) {
+          } else if (MenuVar === 2 || MenuVar === 3) {
+            Ctx.textAlign = "center";
+            Ctx.fillStyle = "#000";
+            Ctx.font = "60px sans-serif";
+            Ctx.fillText("Extras", 360, 60, 720);
+            Ctx.fillRect(0, 75, 720, 2);
+            Ctx.textAlign = "right";
+            Ctx.font = "40px sans-serif";
+            Ctx.fillText('"' + Keybinds.Jump.toUpperCase() + '"', 600, 120, 150);
+            Ctx.fillText('"' + Keybinds.Right.toUpperCase() + '"', 600, 188, 150);
+            Ctx.fillText('"' + Keybinds.Left.toUpperCase() + '"', 600, 256, 150);
+            Ctx.fillText('"' + Keybinds.Down.toUpperCase() + '"', 600, 324, 150);
+            Ctx.fillText('"' + Keybinds.Dash.toUpperCase() + '"', 600, 392, 150);
+            Ctx.fillText(
+              '"' + Keybinds.PlayerFast.toUpperCase() + '"',
+              550,
+              460,
+              150
+            );
+            Ctx.fillText(
+              '"' + Keybinds.PlayerSlow.toUpperCase() + '"',
+              550,
+              528,
+              150
+            );
+            let d = new Date();
+            d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+            let expires = "expires=" + d.toUTCString();
+            document.cookie =
+              "Keybinds=" +
+              Keybinds.Jump +
+              ":" +
+              Keybinds.Right +
+              ":" +
+              Keybinds.Left +
+              ":" +
+              Keybinds.Down +
+              ":" +
+              Keybinds.Dash +
+              ":" +
+              Keybinds.PlayerFast +
+              ":" +
+              Keybinds.PlayerSlow +
+              ";" +
+              expires +
+              ";path=/";
+            for (let i = 0; i < 7; i++) {
+              Ctx.fillRect(10, 85 + 67 * i, 150, 57);
+              Ctx.clearRect(12, 87 + 67 * i, 146, 53);
+            }
+            if (PData.S.BeatLevelFast) {
+              Ctx.fillStyle = "#0f0";
+              Ctx.fillRect(12, 87 + 67 * 6, 146, 53);
+              Ctx.fillStyle = "#000";
+            }
+            Ctx.font = "20px sans-serif";
+            Ctx.textAlign = "center";
+            let i = 85;
+            Ctx.fillText("Die 100 times", 85, i + 20, 140);
+            Ctx.fillText("(" + PData.S.TotalDeaths + ")", 85, i + 40, 140);
+            i += 67;
+            Ctx.fillText("Jump 1000 times", 85, i + 20, 140);
+            Ctx.fillText("(" + PData.S.Jumps + ")", 85, i + 40, 140);
+            i += 67;
+            Ctx.fillText("Beat 50 levels", 85, i + 20, 140);
+            Ctx.fillText("(" + PData.S.LevelsBeaten + ")", 85, i + 40, 140);
+            i += 67;
+            Ctx.fillText("Beat Normal in 10 min", 85, i + 20, 140);
+            Ctx.fillText("(" + PData.S.BestNormalTime + ")", 85, i + 40, 140);
+            i += 67;
+            Ctx.fillText("Dash 300 times", 85, i + 20, 140);
+            Ctx.fillText("(" + PData.S.TimesDashed + ")", 85, i + 40, 140);
+            i += 67;
+            Ctx.fillText("Go through 100 portals", 85, i + 20, 140);
+            Ctx.fillText("(" + PData.S.PortalsTeleported + ")", 85, i + 40, 140);
+            i += 67;
+            Ctx.fillText(
+              "Beat Normal holding " + Keybinds.PlayerFast.toUpperCase(),
+              85,
+              i + 20,
+              140
+            );
+            d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+            let expires2 = "expires=" + d.toUTCString();
+            document.cookie =
+              "Stats=" +
+              PData.S.TotalDeaths +
+              "-" +
+              PData.S.Jumps +
+              "-" +
+              PData.S.LevelsBeaten +
+              "-" +
+              PData.S.BestNormalTime +
+              "-" +
+              PData.S.BestFrames +
+              "-" +
+              PData.S.TimesDashed +
+              "-" +
+              PData.S.PortalsTeleported +
+              "-" +
+              PData.S.BeatLevelFast +
+              ";" +
+              expires2 +
+              ";path=/";
+            Ctx.fillStyle = "#0f0";
+            i = 85 + 45;
+            Ctx.fillRect(12, i, 146 * Math.min(PData.S.TotalDeaths / 100, 1), 10);
+            i += 67;
+            Ctx.fillRect(12, i, 146 * Math.min(PData.S.Jumps / 1000, 1), 10);
+            i += 67;
+            Ctx.fillRect(12, i, 146 * Math.min(PData.S.LevelsBeaten / 50, 1), 10);
+            i += 67;
+            let w = 0;
+            if (PData.S.BestFrames !== 0)
+              w = Math.max(Math.min(36000 / PData.S.BestFrames, 1), 0);
+            Ctx.fillRect(12, i, 146 * w, 10);
+            i += 67;
+            Ctx.fillRect(12, i, 146 * Math.min(PData.S.TimesDashed / 300, 1), 10);
+            i += 67;
+            Ctx.fillRect(
+              12,
+              i,
+              146 * Math.min(PData.S.PortalsTeleported / 100, 1),
+              10
+            );
+            if (PData.S.BeatLevelFast) {
+              Ctx.fillRect(12, i + 67, 146, 10);
+              Ctx.globalAlpha = 0.5;
+              Ctx.fillRect(12, i + 67 - 43, 146, 53);
+            }
+            Ctx.globalAlpha = 0.5;
+            if (PData.S.PortalsTeleported >= 100) Ctx.fillRect(12, i - 43, 146, 53);
+            i -= 67;
+            if (PData.S.TimesDashed >= 300) Ctx.fillRect(12, i - 43, 146, 53);
+            i -= 67;
+            if (PData.S.BestFrames <= 36000 && PData.S.BestFrames !== 0)
+              Ctx.fillRect(12, i - 43, 146, 53);
+            i -= 67;
+            if (PData.S.LevelsBeaten >= 50) Ctx.fillRect(12, i - 43, 146, 53);
+            i -= 67;
+            if (PData.S.Jumps >= 1000) Ctx.fillRect(12, i - 43, 146, 53);
+            i -= 67;
+            if (PData.S.TotalDeaths >= 100) Ctx.fillRect(12, i - 43, 146, 53);
+            Ctx.globalAlpha = 1;
+          } else if (MenuVar === 4) {
+            Ctx.textAlign = "center";
+            Ctx.font = "60px sans-serif";
+            Ctx.fillText("Select game mode:", 360, 100);
+          } else if (MenuVar === 5) {
+            Ctx.font = "60px sans-serif";
+            Ctx.fillText("Select a level:", 360, 60);
+            Ctx.font = "40px sans-serif";
+            Ctx.textAlign = "left";
+            Ctx.fillText("Play single level", 260, 495);
+          } else if (MenuVar === 6) {
+            Ctx.font = "60px sans-serif";
+            Ctx.fillText("Please paste level code", 360, 280);
+            Ctx.fillText("from the clipboard.", 360, 345);
+          } else if (MenuVar === 7) {
+            Ctx.font = "60px sans-serif";
+            Ctx.fillText("Please paste replay code", 360, 280);
+            Ctx.fillText("from the clipboard.", 360, 345);
+          }
+        }
+      };
+
+      class game {
+        constructor(Fullscreen, Ctx, Buttons, Menu, Keybinds, PData2, Level) {
+          let PData = PData2;
+          var Error = false;
+          var GameThis = this;
+          window.onerror = function () {
+            Error = true;
+            Ctx.fillStyle = "#f00";
+            Ctx.fillRect(140, 180, 440, 220);
+            Ctx.fillStyle = "#000";
+            Ctx.font = "120px sans-serif";
+            Ctx.fillText("ERROR", 360, 300);
+            Ctx.font = "40px sans-serif";
+            Ctx.fillText("Game frozen to prevent", 360, 345);
+            Ctx.fillText("browser crash.", 360, 380);
+          };
+          document.addEventListener("keydown", (event) => {
+            if (!PData.Replaying) {
+              switch (event.key.toLowerCase()) {
+                case Keybinds.Jump.toLowerCase():
+                  PData.K.Up = true;
+                  break;
+                case Keybinds.Left.toLowerCase():
+                  PData.K.Left = true;
+                  break;
+                case Keybinds.Right.toLowerCase():
+                  PData.K.Right = true;
+                  break;
+                case Keybinds.Down.toLowerCase():
+                  PData.K.Down = true;
+                  break;
+                case Keybinds.Dash.toLowerCase():
+                  PData.K.Dash = true;
+                  break;
+                case Keybinds.PlayerFast.toLowerCase():
+                  PData.K.TimeUp = true;
+                  break;
+                case Keybinds.PlayerSlow.toLowerCase():
+                  PData.K.TimeDown = true;
+                  break;
+                default:
+              }
+            }
+          });
+          document.addEventListener("keyup", (event) => {
+            if (!PData.Replaying) {
+              switch (event.key.toLowerCase()) {
+                case Keybinds.Jump.toLowerCase():
+                  PData.K.Up = false;
+                  break;
+                case Keybinds.Left.toLowerCase():
+                  PData.K.Left = false;
+                  break;
+                case Keybinds.Right.toLowerCase():
+                  PData.K.Right = false;
+                  break;
+                case Keybinds.Down.toLowerCase():
+                  PData.K.Down = false;
+                  break;
+                case Keybinds.Dash.toLowerCase():
+                  PData.K.Dash = false;
+                  break;
+                case Keybinds.PlayerFast.toLowerCase():
+                  PData.K.TimeUp = false;
+                  break;
+                case Keybinds.PlayerSlow.toLowerCase():
+                  PData.K.TimeDown = false;
+                  break;
+                default:
+              }
+            }
+          });
+          while (true) {
+            var then = new Date().getTime();
+            return (function loop(time) {
+              requestAnimationFrame(loop);
+              var now = new Date().getTime();
+              var delta = now - then;
+              if (delta > 1000 / 60 && !Error) {
+                then = now - (delta % (1000 / 60));
+                GameThis.Update(
+                  Fullscreen,
+                  Ctx,
+                  Buttons,
+                  Menu,
+                  Keybinds,
+                  PData,
+                  Level
+                );
+              }
+            })(0);
+          }
+        }
+        Update(Fullscreen, Ctx, Buttons, Menu, Keybinds, PData, Level) {
+          if (Buttons.MenuVar === -1) {
+            if (PData.TimeSpeed !== 0) PData.RealTime += 1;
+            for (let k = 0; k < 4 * PData.TimeSpeed && !PData.Dead; k++) {
+              let X = Math.floor((PData.M.X + 10) / 24);
+              let Y = Math.floor((PData.M.Y + 10) / 24);
+              PData.M.OnGround = false;
+              PData.M.InPortal = false;
+              PData.M.Gravity = true;
+              PData.M.XFric = 0.9;
+              PData.M.YFric = 1;
+              for (let i = -1; i < 2; i++) {
+                for (let j = -1; j < 2; j++) {
+                  let Block = PData.NumList[X + j + 30 * (Y + i)];
+                  let index = X + j + 30 * (Y + i);
+                  let BlockX = (index % 30) * 24;
+                  let BlockY = Math.floor(index / 30) * 24;
+                  if (
+                    PData.M.X + 20 > BlockX + 2 &&
+                    PData.M.X < BlockX + 22 &&
+                    PData.M.Y + 20 > BlockY + 2 &&
+                    PData.M.Y < BlockY + 22
+                  ) {
+                    //FULL
+                    if (BlockX === 672 && BlockY === 432) {
+                      PData.Level++;
+                      if (
+                        PData.Code.substring(PData.Code.indexOf(":") + 1).indexOf(
+                          ":"
+                        ) >= 0
+                      ) {
+                        PData.Level--;
+                        PData.CodeIndex =
+                          PData.Code.substring(PData.CodeIndex).indexOf(":") +
+                          PData.Code.substring(0, PData.CodeIndex).length +
+                          1;
+                      }
+                      if (PData.Mode !== "Playtest" && !PData.Replaying)
+                        PData.S.LevelsBeaten++;
+                      if (PData.Mode === "Normal") {
+                        if (PData.Level > PData.MaxLevel) {
+                          PData.MaxLevel = PData.Level;
+                          let d = new Date();
+                          d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+                          let expires = "expires=" + d.toUTCString();
+                          document.cookie =
+                            "MaxLev=" + PData.MaxLevel + ";" + expires + ";path=/";
+                        }
+                      
+                        PData.TotalTime += PData.RealTime;
+                        PData.RealTime = 0;
+                        if (PData.SingSeg) PData.Level = 16;
+                      }
+                      if (PData.Code.length !== PData.CodeIndex) {
+                        if (!PData.Replaying) {
+                          PData.Replaying = true;
+                          Level.LoadLevel(PData);
+                          PData.Replaying = false;
+                        } else Level.LoadLevel(PData);
+                      } else PData.Level++;
+                    } else if (
+                      Block === 1 ||
+                      Block === 3 ||
+                      (Block === 4 && PData.Time % 240 < 120) ||
+                      (Block === 5 && PData.Time % 240 >= 120) ||
+                      Block === 6 ||
+                      Block === 7 ||
+                      Block === 8 ||
+                      Block === 13 ||
+                      Block === 14
+                    ) {
+                      PData.Dead = true;
+                    } else if (Block === 9) {
+                      PData.Keys += 1;
+                      PData.NumList[index] = 0;
+                    } else if (Block === 10) {
+                      PData.M.DashDisabled = !PData.M.DashDisabled;
+                      PData.M.Dash = !PData.M.DashDisabled;
+                      PData.NumList[index] = 0;
+                    } else if (Block === 11) {
+                      PData.M.GravityFlip = !PData.M.GravityFlip;
+                      PData.NumList[index] = 0;
+                    } else if (Block === 12) {
+                      PData.M.Gravity = false;
+                      PData.M.XFric = 0.9;
+                      PData.M.YFric = 0.9;
+                    } else if (Block === 15) {
+                      PData.M.XVel /= 3;
+                      PData.M.YVel /= 3;
+                      PData.NumList[index] = 0;
+                    } else if (Block >= 20000) {
+                      if (PData.Keys > 0) {
+                        PData.NumList[index] -= 10000;
+                        PData.Keys -= 1;
+                      }
+                    } else if (Block >= 10000) {
+                      if (!PData.M.InPortal2 && !PData.M.InPortal) {
+                        if (!PData.Replaying) PData.S.PortalsTeleported++;
+                        PData.M.Y = (Block % 100) * 24 + 4;
+                        PData.M.X = (Math.floor(Block / 100) % 100) * 24 + 2;
+                      }
+                      PData.M.InPortal = true;
+                    }
+                  }
+                  if (
+                    PData.M.Y + 20 > BlockY &&
+                    PData.M.Y + 20 < BlockY + 2 &&
+                    PData.M.X + 20 > BlockX &&
+                    PData.M.X < BlockX + 24
+                  ) {
+                    //TOP
+                    if (
+                      Block === 1 ||
+                      Block === 2 ||
+                      (Block === 4 && PData.Time % 240 < 120) ||
+                      (Block === 5 && PData.Time % 240 >= 120)
+                    ) {
+                      PData.M.Y = BlockY - 20;
+                      PData.M.YVel = 0;
+                      if (!PData.M.GravityFlip) {
+                        PData.M.OnGround = true;
+                        PData.M.XFric = 0.9;
+                      }
+                    } else if (Block === 6) {
+                      PData.M.Y = BlockY - 20;
+                      PData.M.YVel = 5;
+                      if (!PData.M.GravityFlip) {
+                        PData.M.OnGround = false;
+                        PData.M.XFric = 0.9;
+                      }
+                    } else if (Block === 7) {
+                      PData.M.Y = BlockY - 20;
+                      PData.M.YVel = 0;
+                      PData.M.XVel -= 0.2 / 3;
+                      if (!PData.M.GravityFlip) {
+                        PData.M.OnGround = true;
+                        PData.M.XFric = 0.9;
+                      }
+                    } else if (Block === 8) {
+                      PData.M.Y = BlockY - 20;
+                      PData.M.YVel = 0;
+                      PData.M.XVel += 0.2 / 3;
+                      if (!PData.M.GravityFlip) {
+                        PData.M.OnGround = true;
+                        PData.M.XFric = 0.9;
+                      }
+                    } else if (Block === 13) {
+                      PData.M.Y = BlockY - 20;
+                      PData.M.YVel = 0;
+                      if (!PData.M.GravityFlip) {
+                        PData.M.OnGround = true;
+                        PData.M.XFric = 0.95;
+                      }
+                    } else if (Block === 14) {
+                      PData.M.Y = BlockY - 20;
+                      PData.M.YVel = 0;
+                      if (!PData.M.GravityFlip) {
+                        PData.M.OnGround = false;
+                        PData.M.Dash = false;
+                        PData.M.XFric = 0.5;
+                      }
+                    } else if (Block === 15) {
+                      if (PData.M.YVel < -4) {
+                        PData.NumList[index] = 0;
+                        PData.M.YVel /= 3;
+                        if (!PData.M.GravityFlip) PData.M.OnGround = true;
+                      } else {
+                        PData.M.Y = BlockY - 20;
+                        PData.M.YVel = 0;
+                        if (!PData.M.GravityFlip) {
+                          PData.M.OnGround = true;
+                          PData.M.XFric = 0.9;
+                        }
+                      }
+                    }
+                  }
+                  if (
+                    PData.M.X + 20 >= BlockX &&
+                    PData.M.X + 20 < BlockX + 2 &&
+                    PData.M.Y + 20 > BlockY &&
+                    PData.M.Y < BlockY + 24
+                  ) {
+                    //LEFT
+                    if (
+                      Block === 1 ||
+                      (Block === 4 && PData.Time % 240 < 120) ||
+                      (Block === 5 && PData.Time % 240 >= 120) ||
+                      Block === 8
+                    ) {
+                      PData.M.X = BlockX - 20;
+                      PData.M.XVel = 0;
+                    } else if (Block === 6) {
+                      PData.M.YVel += 1 / 20 / 4;
+                      PData.M.YFric = 0.8;
+                      PData.M.X = BlockX - 20;
+                      PData.M.XVel = 0;
+                    } else if (Block === 7) {
+                      PData.M.X = BlockX - 20;
+                      PData.M.XVel = -5;
+                    } else if (Block === 13) {
+                      PData.M.X = BlockX - 20;
+                      PData.M.XVel = 0;
+                    } else if (Block === 14) {
+                      PData.M.X = BlockX - 20;
+                      PData.M.XVel = 0;
+                      PData.M.YFric = 0.5;
+                    } else if (Block === 15) {
+                      if (PData.M.XVel > 4) {
+                        PData.NumList[index] = 0;
+                        PData.M.XVel /= 3;
+                      } else {
+                        PData.M.X = BlockX - 20;
+                        PData.M.XVel = 0;
+                      }
+                    }
+                  }
+                  if (
+                    PData.M.X > BlockX + 22 &&
+                    PData.M.X <= BlockX + 24 &&
+                    PData.M.Y + 20 > BlockY &&
+                    PData.M.Y < BlockY + 23
+                  ) {
+                    //RIGHT
+                    if (
+                      Block === 1 ||
+                      (Block === 4 && PData.Time % 240 < 120) ||
+                      (Block === 5 && PData.Time % 240 >= 120) ||
+                      Block === 7
+                    ) {
+                      PData.M.X = BlockX + 24;
+                      PData.M.XVel = 0;
+                    } else if (Block === 6) {
+                      PData.M.YVel += 1 / 20 / 4;
+                      PData.M.YFric = 0.8;
+                      PData.M.X = BlockX + 24;
+                      PData.M.XVel = 0;
+                    } else if (Block === 8) {
+                      PData.M.X = BlockX + 24;
+                      PData.M.XVel = 5;
+                    } else if (Block === 13) {
+                      PData.M.X = BlockX + 24;
+                      PData.M.XVel = 0;
+                    } else if (Block === 14) {
+                      PData.M.X = BlockX + 24;
+                      PData.M.XVel = 0;
+                      PData.M.YFric = 0.5;
+                    } else if (Block === 15) {
+                      if (PData.M.XVel < -4) {
+                        PData.NumList[index] = 0;
+                        PData.M.XVel /= 3;
+                      } else {
+                        PData.M.X = BlockX + 24;
+                        PData.M.XVel = 0;
+                      }
+                    }
+                  }
+                  if (
+                    PData.M.Y > BlockY + 22 &&
+                    PData.M.Y < BlockY + 24 &&
+                    PData.M.X + 20 > BlockX &&
+                    PData.M.X < BlockX + 24
+                  ) {
+                    //BOTTOM
+                    if (
+                      Block === 1 ||
+                      (Block === 4 && PData.Time % 240 < 120) ||
+                      (Block === 5 && PData.Time % 240 >= 120)
+                    ) {
+                      PData.M.Y = BlockY + 24;
+                      PData.M.YVel = 0;
+                      if (PData.M.GravityFlip) {
+                        PData.M.OnGround = true;
+                        PData.M.XFric = 0.9;
+                      }
+                    } else if (Block === 6) {
+                      PData.M.Y = BlockY + 24;
+                      PData.M.YVel = 0.1;
+                      if (PData.M.GravityFlip) {
+                        PData.M.OnGround = true;
+                        PData.M.XFric = 0.9;
+                      }
+                    } else if (Block === 7) {
+                      PData.M.Y = BlockY + 24;
+                      PData.M.YVel = 0;
+                      PData.M.XVel -= 0.2 / 3;
+                      if (PData.M.GravityFlip) {
+                        PData.M.OnGround = true;
+                        PData.M.XFric = 0.9;
+                      }
+                    } else if (Block === 8) {
+                      PData.M.Y = BlockY + 24;
+                      PData.M.YVel = 0;
+                      PData.M.XVel += 0.2 / 3;
+                      if (PData.M.GravityFlip) {
+                        PData.M.OnGround = true;
+                        PData.M.XFric = 0.9;
+                      }
+                    } else if (Block === 13) {
+                      PData.M.Y = BlockY + 24;
+                      PData.M.YVel = 0;
+                      if (PData.M.GravityFlip) {
+                        PData.M.OnGround = true;
+                        PData.M.XFric = 0.95;
+                      }
+                    } else if (Block === 14) {
+                      PData.M.Y = BlockY + 24;
+                      PData.M.YVel = 0;
+                      if (PData.M.GravityFlip) {
+                        PData.M.OnGround = false;
+                        PData.M.Dash = false;
+                        PData.M.XFric = 0.5;
+                      }
+                    } else if (Block === 15) {
+                      if (PData.M.YVel > 3) {
+                        PData.NumList[index] = 0;
+                        PData.M.YVel /= 3;
+                        if (PData.M.GravityFlip) PData.M.OnGround = true;
+                      } else {
+                        PData.M.Y = BlockY + 24;
+                        PData.M.YVel = 0;
+                        if (PData.M.GravityFlip) {
+                          PData.M.OnGround = true;
+                          PData.M.XFric = 0.9;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              if (((PData.Time * 100) / 100 + PData.ReplayTime) % 1 === 0) {
+                if (PData.Replaying) {
+                  Level.KeyDecompress(
+                    PData.K,
+                    PData.CurrentReplay[PData.Time + PData.ReplayTime] || "4"
+                  );
+                  if (
+                    PData.Time + PData.ReplayTime + 1 >= PData.CurrentReplay.length &&
+                    PData.Level > 0 &&
+                    PData.Level < 16
+                  )
+                    PData.Level = 16;
+                } else PData.CurrentReplay += Level.KeyCompress(PData.K);
+                if (PData.K.Up) {
+                  if (PData.M.OnGround && PData.M.Gravity && !PData.M.GravityFlip) {
+                    PData.M.YVel = 2.5;
+                    if (!PData.Replaying) PData.S.Jumps++;
+                  }
+                  if (!PData.M.Gravity) PData.M.YVel += 0.3 - 1 / 16.7;
+                  else if (!PData.M.GravityFlip) PData.M.YVel += 1 / 16.7;
+                }
+                if (PData.K.Left) {
+                  PData.M.XVel -= 0.3;
+                }
+                if (PData.K.Right) {
+                  PData.M.XVel += 0.3;
+                }
+                if (PData.K.Down) {
+                  if (PData.M.OnGround && PData.M.Gravity && PData.M.GravityFlip) {
+                    PData.M.YVel = -2.5;
+                    if (!PData.Replaying) PData.S.Jumps++;
+                  }
+                  if (!PData.M.Gravity) PData.M.YVel -= 0.3 - 1 / 16.7;
+                  else if (PData.M.GravityFlip) {
+                    PData.M.YVel -= 1 / 16.7;
+                  }
+                }
+                if (PData.K.Dash && PData.M.Dash && !PData.M.OnGround) {
+                  if (PData.K.Up || PData.K.Left || PData.K.Right || PData.K.Down) {
+                    PData.M.Dash = false;
+                    if (!PData.Replaying) PData.S.TimesDashed++;
+                  }
+                  if (PData.K.Up) PData.M.YVel = 2;
+                  if (PData.K.Left) PData.M.XVel -= 3;
+                  if (PData.K.Right) PData.M.XVel += 3;
+                  if (PData.K.Down) PData.M.YVel = -2;
+                }
+                PData.TimeSpeed = (PData.TimeSpeed - 1.001) * 0.9 + 1.001;
+                if (PData.K.TimeUp) {
+                  PData.TimeSpeed += 0.1;
+                }
+                if (PData.K.TimeDown) {
+                  PData.TimeSpeed -= 0.099;
+                }
+                PData.M.XVel *= PData.M.XFric;
+                PData.M.YVel *= PData.M.YFric;
+              }
+              if (
+                (PData.M.Y > 490 && !PData.M.GravityFlip) ||
+                (PData.M.Y < -10 && PData.M.GravityFlip)
+              ) {
+                PData.Dead = true;
+              } else if (PData.M.Y < 0 && !PData.M.GravityFlip) {
+                PData.M.Y = 0;
+                PData.M.YVel = 0;
+              } else if (PData.M.Y > 460 && PData.M.GravityFlip) {
+                PData.M.Y = 460;
+                PData.M.YVel = 0;
+              }
+              if (PData.M.X < 0) {
+                PData.M.X = 0;
+                PData.M.XVel = 0;
+              } else if (PData.M.X > 700) {
+                PData.M.X = 700;
+                PData.M.XVel = 0;
+              }
+              PData.Time += 1 / 4;
+              if ((PData.Time * 100) % 1 !== 0) {
+                console.log("Rounding error detected!");
+                console.log("Time: " + PData.Time);
+                PData.Time = Math.floor(PData.Time * 100 + 0.5) / 100;
+                console.log("Corrected Time: " + PData.Time);
+              }
+              if (PData.M.Gravity) {
+                if (!PData.M.GravityFlip) PData.M.YVel -= 1 / 40;
+                else PData.M.YVel += 1 / 40;
+              }
+              if (PData.M.OnGround && !PData.M.DashDisabled) PData.M.Dash = true;
+              PData.M.X += PData.M.XVel / 4;
+              PData.M.Y -= PData.M.YVel / 4;
+              PData.M.InPortal2 = PData.M.InPortal;
+              if (PData.Level === -1 || PData.Level === 16 || PData.Level === 107) {
+                if (!PData.Replaying) Buttons.MenuVar = -3;
+                else Buttons.MenuVar = -4;
+              }
+            }
+          }
+          if (PData.Dead) Level.LoadLevel(PData);
+          Fullscreen.Update(Ctx, Buttons, Menu, Keybinds, PData, Level);
+        }
+      };
+
+      class level {
+        Decompress(Letter) {
+          if (Letter === "!") return 62;
+          if (Letter === "#") return 63;
+          if (Letter === "$") return 64;
+          if (Letter === "%") return 65;
+          if (Letter === "^") return 66;
+          if (Letter === "&") return 67;
+          if (Letter === "*") return 68;
+          if (Letter === "(") return 69;
+          if (Letter === ")") return 70;
+          if (Letter === "@") return 71;
+          if (Letter.toLowerCase() == Letter) return parseInt(Letter, 36);
+          return parseInt(Letter, 36) + 26;
+        }
+        Compress(Num) {
+          if (Num === 71) return "@";
+          if (Num === 70) return ")";
+          if (Num === 69) return "(";
+          if (Num === 68) return "*";
+          if (Num === 67) return "&";
+          if (Num === 66) return "^";
+          if (Num === 65) return "%";
+          if (Num === 64) return "$";
+          if (Num === 63) return "#";
+          if (Num === 62) return "!";
+          if (Num > 35) return (Num - 26).toString(36).toUpperCase();
+          return Num.toString(36);
+        }
+        KeyCompress(Keys) {
+          let Num = 0;
+          if (Keys.TimeDown === Keys.TimeUp) Num += 1;
+          else if (Keys.TimeUp) Num += 2;
+          if (Keys.Left === Keys.Right) Num += 3;
+          else if (Keys.Right) Num += 6;
+          if (Keys.Up) Num += 9;
+          if (Keys.Down) Num += 18;
+          if (Keys.Dash) Num += 36;
+          return this.Compress(Num);
+        }
+        KeyDecompress(Keys, Letter) {
+          Keys.TimeDown = false;
+          Keys.TimeUp = false;
+          Keys.Left = false;
+          Keys.Right = false;
+          Keys.Up = false;
+          Keys.Down = false;
+          Keys.Dash = false;
+          let Num = this.Decompress(Letter);
+          if (Num % 3 === 0) Keys.TimeDown = true;
+          else if (Num % 3 === 2) Keys.TimeUp = true;
+          Num = Math.floor(Num / 3);
+          if (Num % 3 === 0) Keys.Left = true;
+          else if (Num % 3 === 2) Keys.Right = true;
+          Num = Math.floor(Num / 3);
+          if (Num % 2 === 1) Keys.Up = true;
+          Num = Math.floor(Num / 2);
+          if (Num % 2 === 1) Keys.Down = true;
+          Num = Math.floor(Num / 2);
+          if (Num === 1) Keys.Dash = true;
+        }
+        Decode(LevelCode) {
+          LevelCode = this.Decode2(LevelCode);
+          LevelCode = LevelCode.substring(0, LevelCode.indexOf(":"));
+          let NumList = [];
+          let CurrentBlock = 0;
+          for (let i = 0; LevelCode[i] !== "@"; i += 2) {
+            CurrentBlock = Math.floor(this.Decompress(LevelCode[i + 1]) / 16);
+            CurrentBlock += Math.floor(this.Decompress(LevelCode[i]) / 16) * 4;
+            NumList.push(CurrentBlock);
+            NumList.push(this.Decompress(LevelCode[i]) % 16);
+            NumList.push(this.Decompress(LevelCode[i + 1]) % 16);
+          }
+          for (let i = LevelCode.indexOf("@") + 1; i < LevelCode.length; i += 4) {
+            CurrentBlock = 10000;
+            if (this.Decompress(LevelCode[i + 3]) > 31) CurrentBlock *= 2;
+            let index = this.Decompress(LevelCode[i]);
+            index += this.Decompress(LevelCode[i + 1]) * 30;
+            CurrentBlock += 100 * this.Decompress(LevelCode[i + 2]);
+            CurrentBlock += this.Decompress(LevelCode[i + 3]) % 32;
+            NumList[index] = CurrentBlock;
+          }
+          return NumList;
+        }
+        Encode(NumList) {
+          let Str = "@";
+          let Temp = 0;
+          for (let i = 0; i < 600; i += 3) {
+            Temp = 0;
+            if (NumList[i] < 16) Temp += Math.floor(NumList[i] / 4) * 16;
+            if (NumList[i + 1] < 16) Temp += NumList[i + 1];
+            Str =
+              Str.substring(0, Str.indexOf("@")) +
+              this.Compress(Temp) +
+              Str.substring(Str.indexOf("@"));
+            Temp = 0;
+            if (NumList[i] < 16) Temp += (NumList[i] % 4) * 16;
+            if (NumList[i + 2] < 16) Temp += NumList[i + 2];
+            Str =
+              Str.substring(0, Str.indexOf("@")) +
+              this.Compress(Temp) +
+              Str.substring(Str.indexOf("@"));
+            for (let j = 0; j < 3; j++) {
+              if (NumList[i + j] > 16) {
+                Str += this.Compress((i + j) % 30);
+                Str += this.Compress(Math.floor((i + j) / 30));
+                Str += this.Compress(Math.floor(NumList[i + j] / 100) % 100);
+                Temp = NumList[i + j] % 100;
+                Temp += 32 * Math.floor(NumList[i + j] / 10000 - 1);
+                Str += this.Compress(Temp);
+              }
+            }
+          }
+          return this.Encode2(Str) + ":";
+        }
+        Decode2(LevelCode) {
+          let NewCode = LevelCode;
+          let Num = 0;
+          let a = 0;
+          let b = 0;
+          while (NewCode.indexOf("(") >= 0) {
+            a = NewCode.indexOf("(");
+            b = NewCode.indexOf(")");
+            Num = parseInt(NewCode.substring(a + 1, b), 10);
+            for (let i = 1; i < Num; i++)
+              NewCode =
+                NewCode.substring(0, b + 1) +
+                NewCode.substring(b + 1, b + 2) +
+                NewCode.substring(b + 1);
+            NewCode = NewCode.substring(0, a) + NewCode.substring(b + 1);
+          }
+          return NewCode;
+        }
+        Encode2(LevelCode) {
+          let Temp = "";
+          let NewCode = LevelCode;
+          for (let i = LevelCode.length - 1, j = 0; i >= 0; i--) {
+            j = 0;
+            Temp = LevelCode.substring(i, i + 1);
+            for (
+              let k = 1;
+              i - k >= 0 && Temp === LevelCode.substring(i - k, i - k + 1);
+              k++
+            ) {
+              if (k > 4) j = k + 1;
+            }
+            if (j > 0) {
+              NewCode =
+                NewCode.substring(0, i - j + 1) +
+                "(" +
+                j +
+                ")" +
+                Temp +
+                NewCode.substring(i + 1);
+              i -= j - 1;
+            }
+          }
+          return NewCode;
+        }
+        LoadLevel(PData) {
+          if (!PData.Replaying && !PData.Dead) {
+            PData.CurrentReplay = "";
+            PData.CodeIndex = 0;
+            PData.K.TimeUp = false;
+            PData.K.TimeDown = false;
+            PData.K.Dash = false;
+            PData.K.Left = false;
+            PData.K.Right = false;
+            PData.K.Down = false;
+            PData.K.Up = false;
+            PData.Attempts = 1;
+          }
+          if (PData.Dead) {
+            PData.Attempts++;
+            if (!PData.Replaying) PData.S.TotalDeaths++;
+          }
+          PData.Dead = false;
+          if (PData.Replaying) PData.ReplayTime += PData.Time;
+          PData.Time = 0;
+          if (PData.TimeSpeed !== 0) PData.TimeSpeed = 1;
+          PData.Keys = 0;
+          PData.M.X = 26;
+          PData.M.Y = 436;
+          PData.M.XVel = 0;
+          PData.M.YVel = 0;
+          PData.M.XFric = 0.9;
+          PData.M.YFric = 1;
+          PData.M.Gravity = true;
+          PData.M.OnGround = true;
+          PData.M.Dash = true;
+          PData.M.DashDisabled = false;
+          PData.M.GravityFlip = false;
+          PData.M.InPortal = false;
+          PData.M.InPortal2 = false;
+          if (this.MainCode(PData.Level) !== -1)
+            PData.Code = this.MainCode(PData.Level);
+          PData.NumList = this.Decode(PData.Code.substring(PData.CodeIndex));
+        }
+        MainCode(Level) {
+          if (Level === 1)
+            return "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000l5lg04llgg45ll000000g050wQ00gr4005b00000g0500400gg40050000a0gb5004b0gg40wR0000k4g054k400kkk005k4k4@:";
+          if (Level === 2)
+            return "00000000000010wwMM00000000000000118gMM00000000000000008gMM00000000000000008gMM00000000100000008gMM00000000100000008gMM00000000100000008gMM00000000100000008gMM00000000100000008gMM00000000100000008gMM00000000100000008gMM00000000300000008gMM00000000000000008gMM00000g00300000008gMM0000gw00100000008gMM0000gw00100000008gMM00000g00100000008gMM00000g00100000008gMM00000g00100000008gMM001h0g00100000111h1h1h@kik0:";
+          if (Level === 3)
+            return "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001h1h1g000000000000000000100000000000000000001000000000000000000016mCmC1g000000002y0g60wg001000000000000g00033P1g00000000000g00010000000000001h0g000100000000001h@1fsL:";
+          if (Level === 4)
+            return "0000000g0000000000000000000g0000000000000000000g000000000000000000MT1h1g00000000000000MT000000000000000000MT000000000000000000MT000000000000000000MT000000000000000000MT000000000000000000MT000000000000000000MT000000000000000000MT000000000000000000MT000000000000000000MT000000000000000000MT000000000000000000MT000000000000000000MT00000000000000000007000000000000a00000070000000000001h1h1h3h00000000001h@:";
+          if (Level === 5)
+            return "000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M3003000M000M3003000M30032y0M000M3003000M30030000000M3003000M3003##1h@1j505j909jd0djh0hjl0ljp0:";
+          if (Level === 6)
+            return "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000033P3P3P000000000000030000000000000000000300000000002w00000003000000000000000000030000000000000000000300000000001h000000030000000000@:";
+          if (Level === 7)
+            return "0300003000000M0000000300003000000M0000000300003000000M00000003000M3003000M333P0003000M30wP000M3000b003000M3003000M30wM0003000X3003000M30000003000M0003b00M30033P03000M0003000M30wM003Pb00M0003000X3000b000003P3P3P000M30000000000M3000000M333P0000000M30wM000M3000b000000M3000000M30wM0000000M30033P0M30000000000M3003000M30033P00000M30wP3P0M30000000000M30000000300000a0000M30000000300000b0000M30000000311h1h@:";
+          if (Level === 8)
+            return "00000M000M000M000100000M0M0M0M0M0M0M0100000M0M0M0M0M0M0M0100000M000M000M000M0100E8E8E8E8E8E8E8E22x003P3P3P3P3P3P3P3M01000000000000000000010000000000000000000100000000000000000001002yhC6hhC6hhC6hhxhx00003P3P3P3P3P3P3P3N000000000000000000010000000000000000000100000000000000000001006h6h6h6h6h6h6h6i2x003P3P3P3P3P3P3P3M01000000000000000000010000000000000000000100000000000000000001001hhx6h1m1hhx6h1hhx1h@13s1:";
+          if (Level === 9)
+            return "0000000M0M0M00000111000g000M000M00000111000g000M0M0M00000111000g00000M000000011N001h8oE8E8E81h1i2x11000g000M0003000001111h0g300M000P000001WM0000300M000P000001##00003000000M000001002y1h1h1h1h1h1h1hhx000000000000000000010000000M000M000M00010000000M000M000M00010000000M000M000M0001006h1h1h1h1h1h1h1i2x00000000000000000001000000000000000000010000303030030303000100003030300303030001001h1h1h1h1h1h1h1hhx1h@15r4t61i:";
+          if (Level === 10)
+            return "csYcY1YcYcYcYcYcY1Ycch1sch1sch1h1h1hch1schNccsNcchYcYcYccsNcchNcchN1chNc1h1schNcchNcchYcchNcYcNcchYcchNc1h1schN1ch1schN1csNcYcNcchYcchYcchYcch1h1hNcchNcchN1ch1hcsYccsNcY1NcchYcchYc1h1sch1h1h1sch1s1hNccsYccsYcY1YccsNcY1Ncch1sch1hchN11hN1chNccsNccsYcchYcY1YcchNc1hNc1h1sch1hch1schNcchNccsYccsYcY1YccsNcchNc1hN11hN11hN11h1scsNcY1NcY1NccsNccsYc1h1hchN1chNcch1sch1h0hcsY1YcY1YccsYccsYc0h1h1h1h1h1h1h1h1h1h@1j10:";
+          if (Level === 11)
+            return "0k0001000000000001wg0h1g0h1g0h!K!K!x0h1g0h100g100h0000000g100h100j114h101h1g0h100h100h000h1000100h000h101h1g0h110h3g0h110g1000105h000h000h000h1m3j100j100h110h1x0g000g1003100h000h001h1g0h8oE31g0h1g3h110g000M0003000g1001100h1g0N1h0j116h110h100gh00M000j0001000N111hh07TnM0hnTgN3g0N109hh00M000g0001000M100hh01h111h111h111h1k0gh0011b01100g190g001h1h0h110h120h1g0h1h0h0M010001000g000g000h1h1h0g111h1tZg1h1h@323wt8tGtbtM1j10:";
+          if (Level === 12)
+            return "00000000000000003P3P0000000000000000cYY30000000000000000cPcP0000000000000000cPY30000000000000000cPP30000000000000000cPY30000000000000000cPcP0000000000000000cPY30000000000000000cPP30000000000000000cPY30000000000000000cPcP0000000000000000cPY30000000000000000cPP30000000000000000cPY30000000000000000cPcP1h0h1h0h3N1g111hcPY3000h000h00101001cPP3003P003P00331M03cP0100Yc00Yc00ccM00cY3011h3P1hmC1h3P1N1j3P1h@:";
+          if (Level === 13)
+            return "00000000001010001000000000000010100010000000000000101000100000000000031010001000000000000110100010000000000001101000100000000000031010001000000000000110100010000000000001101000100000000000031010001000000000000110100010000000000001101000100000000000031030003000000000000110000000000000000001100030000000000000031030303000000000000100103010003P3P3P3M010010301000a00000000100103010001j3h1P3h1h1g10301011@:";
+          if (Level === 14)
+            return "E87TjUE3nT8Uz8E30100000M3003000M300301b0000M3003000M30030100000M3003000M30011h00000000000000000001000g000000000000000100001h00Mgd00d00Mg0100009g0000000000000100000g0000000000000100003j3P3P3P3P3P3P3N000000000000000000010000000000000000000100b00M3003000M300301001h4Qj5ljk45Rjkk3210000000000000000000100000000000000000001000003000M3003000M21000003000M3003000M01000003000M3003000M01001h1h1h1h1h1h1h1h1h1h@1esx:";
+          if (Level === 15)
+            return "3P3P3P3P3P3P3M000000YcY3YccY000030000000YccYPcY3003030000000Yc3P3P3P0M003eMK!zgCYc0M0003000030000300Yc0M0003000030000300Yc0M0003006030000366000M3003gz003eSKe300000M3003000030000300000030030003300003mw00003003000030000300000030wP060030!Kuz00mCjz3M030000300003gC00wg3003300630000300000M3003000030000300000g3003003036!w!z1h000r0003000000000300000g0003600000000300000g00030000000003001h6mmCmz00606e!C!z1h@1hsM:";
+          if (Level === 101)
+            return "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111h1h00000000000000111h1h00000000000000111h1h00000000000000111h1h00000000000000111h1h00000000111h1h1h1h1h0000000010000000000100000000100000000001001h1h1h1g00000000011h@:";
+          if (Level === 102)
+            return "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002y0000000000000000000000000000000000000000000000000000033P002w00000000000000010000000000000000000100000000000000000001001h3P3P3P3P3P3P3O2x000000000000000000010000000000000000000100000000000000001N1h00000000000000001N1h00000000000000001N1h001h001h001h3P1h1N1h1h@:";
+          if (Level === 103)
+            return "000000000000g0000000000000000000g0000000000000000000g0000000000000000000g0000000000000000000g00000000000000000k4g00000000000000000gg000000000000000000gg0000000000000000llgg0000000000000000g0000000000000000000g00000000000000000k4g00000000000000000gg000000000000000000gg0000000000000000llgg00000000000000000000000000000000000000000000000000001h2h000000000000000000wx00000000000000001h1h000000000000001h@:";
+          if (Level === 104)
+            return "0000000000000000000000000000000000000000000000000000000000001h#############N1h000000000000000000010000000000000000000100000000000000000001001hmCmCmCmCmCmCmy2x0000000000000000000100000000000000000M0100000000000000000M01002y!K!K!K!K!K!KNx1h0000MMf00f00000000010000MMf00f00000000010000MMf00f0000000001001h7nhTnNnTnTnTnO2x000000000000000000010000000000000000000100000000000000000001001hnTnTnN1hE8E8E11h1h@:";
+          if (Level === 105)
+            return "Zg0000000000000000000000000000000000000000000000000000000000000d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d00000d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d00000000000000000000000000000000000000000000000000000000000000001x1h1h1h1h0g00000000wM000000000g000000001h1h1h1h1h0g00000000@:";
+          if (Level === 106)
+            return "00000010000000000100000000100000000001000000001000000000010000000M111h1h1h1h1h0000000M1cYcYcYcYcY10000000M1cYcYcYcYcc12y00000M1cYcYcYcYcY1##00000M1cY33P3P3P3N##00000M1cYcYcYcYcY1##00000M1cYcYcYcYcY1Yc00000M1cYcYcYcYcY1Yc00000M133P3P3P3YY1Yc00000M1cYcYcYcYcY1Yc00000M1cYcYcYcYcY1Yc00000M1cYcYcYcYcY1Yc1h1h1h1h1h1h1h1h1hYc000000100000000001Yc00000010000000000100000000100000000091001h1h1h1h1h1h1h1h1h1h@s3s0o5s23c338ecd8icici8imi1K:";
+          return -1;
+        }
+      };
+
+
+      let Level = new level();
+      let Canvas = document.getElementById("GameScreen");
+      let Ctx = Canvas.getContext("2d");
+
+      let Keybinds = {
+        Jump: "w",
+        Left: "a",
+        Right: "d",
+        Down: "s",
+        Dash: "k",
+        PlayerFast: "l",
+        PlayerSlow: "j"
+      };
+      let NumList = [];
+      let Holding = 0;
+      for (let i = 0; i < 600; i++) NumList.push(0);
+      let PData = {
+        Level: 0,
+        StartLevel: 0,
+        MaxLevel: 1,
+        Mode: "None",
+        Dead: false,
+        Time: 0,
+        RealTime: 0,
+        TotalTime: 0,
+        ReplayTime: 0,
+        Attempts: 1,
+        Replaying: false,
+        TimeSpeed: 1,
+        Keys: 0,
+        M: {
+          X: 26,
+          Y: 436,
+          XVel: 0,
+          YVel: 0,
+          XFric: 0.9,
+          YFric: 1,
+          Gravity: true,
+          OnGround: true,
+          Dash: true,
+          DashDisabled: false,
+          GravityFlip: false,
+          InPortal: false,
+          InPortal2: false
+        },
+        K: {
+          Up: false,
+          Left: false,
+          Right: false,
+          Down: false,
+          Dash: false,
+          TimeUp: false,
+          TimeDown: false
+        },
+        S: {
+          TotalDeaths: 0,
+          Jumps: 0,
+          LevelsBeaten: 0,
+          BestNormalTime: "N/A",
+          BestFrames: 0,
+          TimesDashed: 0,
+          PortalsTeleported: 0,
+          BeatLevelFast: false
+        },
+        SingSeg: false,
+        CurrentReplay: "",
+        CustomList: NumList,
+        NumList: [],
+        Code: "",
+        CodeIndex: 0
+      };
+      let Buttons = new buttons(Canvas, Keybinds);
+      let Menu = new menu();
+      let Fullscreen = new fullscreen(
+        Canvas,
+        Ctx,
+        Buttons,
+        Menu,
+        Keybinds,
+        PData,
+        Level
+      );
+      let Game = new game(Fullscreen, Ctx, Buttons, Menu, Keybinds, PData, Level);
+
+      let name = "MaxLev=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(";");
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === " ") {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+          c = c.substring(name.length);
+          PData.MaxLevel = parseInt(c, 10);
+        }
+      }
+      name = "Keybinds=";
+      decodedCookie = decodeURIComponent(document.cookie);
+      ca = decodedCookie.split(";");
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === " ") {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+          c = c.substring(name.length);
+          Keybinds.Jump = c.substring(0, c.indexOf(":"));
+          c = c.substring(c.indexOf(":") + 1);
+          Keybinds.Right = c.substring(0, c.indexOf(":"));
+          c = c.substring(c.indexOf(":") + 1);
+          Keybinds.Left = c.substring(0, c.indexOf(":"));
+          c = c.substring(c.indexOf(":") + 1);
+          Keybinds.Down = c.substring(0, c.indexOf(":"));
+          c = c.substring(c.indexOf(":") + 1);
+          Keybinds.Dash = c.substring(0, c.indexOf(":"));
+          c = c.substring(c.indexOf(":") + 1);
+          Keybinds.PlayerFast = c.substring(0, c.indexOf(":"));
+          c = c.substring(c.indexOf(":") + 1);
+          Keybinds.PlayerSlow = c;
+        }
+      }
+      name = "Stats=";
+      decodedCookie = decodeURIComponent(document.cookie);
+      ca = decodedCookie.split(";");
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === " ") {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+          c = c.substring(name.length);
+          PData.S.TotalDeaths = parseInt(c.substring(0, c.indexOf("-")), 10);
+          c = c.substring(c.indexOf("-") + 1);
+          PData.S.Jumps = parseInt(c.substring(0, c.indexOf("-")), 10);
+          c = c.substring(c.indexOf("-") + 1);
+          PData.S.LevelsBeaten = parseInt(c.substring(0, c.indexOf("-")), 10);
+          c = c.substring(c.indexOf("-") + 1);
+          PData.S.BestNormalTime = c.substring(0, c.indexOf("-"));
+          c = c.substring(c.indexOf("-") + 1);
+          PData.S.BestFrames = parseInt(c.substring(0, c.indexOf("-")), 10);
+          c = c.substring(c.indexOf("-") + 1);
+          PData.S.TimesDashed = parseInt(c.substring(0, c.indexOf("-")), 10);
+          c = c.substring(c.indexOf("-") + 1);
+          PData.S.PortalsTeleported = parseInt(c.substring(0, c.indexOf("-")), 10);
+          c = c.substring(c.indexOf("-") + 1);
+          PData.S.BeatLevelFast = c === "true";
+        }
+      }
+
+      Buttons.New({
+        X: 260,
+        Y: 200,
+        W: 200,
+        H: 100,
+        MenuShow: [0],
+        MenuGoal: 4,
+        Text: "Play",
+        FontSize: 70,
+        Fun: function () {},
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 560,
+        Y: 467,
+        W: 150,
+        H: 75,
+        MenuShow: [0],
+        MenuGoal: 2,
+        Text: "Extras",
+        FontSize: 45,
+        Fun: function () {},
+        Disp: function () {}
+      });
+      let Click = false;
+      Buttons.New({
+        X: 260,
+        Y: 310,
+        W: 200,
+        H: 100,
+        MenuShow: [0],
+        MenuGoal: -2,
+        Text: "Custom",
+        FontSize: 55,
+        Fun: function () {
+          PData.Mode = "Custom";
+          Click = false;
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 185,
+        Y: 467,
+        W: 150,
+        H: 75,
+        MenuShow: [2],
+        MenuGoal: 2,
+        Text: "Wipe Save",
+        FontSize: 38,
+        BorderColor: "#000",
+        TextColor: "#000",
+        Fun: function () {
+          if (this.BorderColor === "#000") {
+            this.BorderColor = "#f00";
+            this.TextColor = "#f00";
+          } else {
+            let d = new Date();
+            d.setTime(d.getTime() - 24 * 60 * 60 * 1000);
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = "MaxLev=-;" + expires + ";path=/";
+            document.cookie = "Stats=-;" + expires + ";path=/";
+            PData.MaxLevel = 1;
+            PData.S.TotalDeaths = 0;
+            PData.S.Jumps = 0;
+            PData.S.LevelsBeaten = 0;
+            PData.S.BestNormalTime = "N/A";
+            PData.S.BestFrames = 0;
+            PData.S.TimesDashed = 0;
+            PData.S.PortalsTeleported = 0;
+            PData.S.BeatLevelFast = 0;
+            this.BorderColor = "#000";
+            this.TextColor = "#000";
+            Buttons.MenuVar = 0;
+          }
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 10,
+        Y: 13,
+        W: 50,
+        H: 50,
+        MenuShow: [1, 2],
+        MenuGoal: 0,
+        Text: "X",
+        FontSize: 40,
+        Fun: function () {},
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 10,
+        Y: 85,
+        W: 150,
+        H: 75,
+        MenuShow: [10527],
+        MenuGoal: 2,
+        Text: "Keybinds",
+        FontSize: 38,
+        Fun: function () {},
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 610,
+        Y: 85,
+        W: 100,
+        H: 50,
+        MenuShow: [2, 3],
+        MenuGoal: 3,
+        Text: "Up",
+        FontSize: 40,
+        Fun: function () {
+          let Listen = true;
+          Keybinds.Jump = " ";
+          document.addEventListener("keydown", (event) => {
+            if (Listen) {
+              Keybinds.Jump = event.key;
+              Buttons.MenuVar = 2;
+              Listen = false;
+            }
+          });
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 610,
+        Y: 153,
+        W: 100,
+        H: 50,
+        MenuShow: [2, 3],
+        MenuGoal: 3,
+        Text: "Right",
+        FontSize: 40,
+        Fun: function () {
+          let Listen = true;
+          Keybinds.Right = " ";
+          document.addEventListener("keydown", (event) => {
+            if (Listen) {
+              Keybinds.Right = event.key;
+              Buttons.MenuVar = 2;
+              Listen = false;
+            }
+          });
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 610,
+        Y: 221,
+        W: 100,
+        H: 50,
+        MenuShow: [2, 3],
+        MenuGoal: 3,
+        Text: "Left",
+        FontSize: 40,
+        Fun: function () {
+          let Listen = true;
+          Keybinds.Left = " ";
+          document.addEventListener("keydown", (event) => {
+            if (Listen) {
+              Keybinds.Left = event.key;
+              Buttons.MenuVar = 2;
+              Listen = false;
+            }
+          });
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 610,
+        Y: 289,
+        W: 100,
+        H: 50,
+        MenuShow: [2, 3],
+        MenuGoal: 3,
+        Text: "Down",
+        FontSize: 40,
+        Fun: function () {
+          let Listen = true;
+          Keybinds.Down = " ";
+          document.addEventListener("keydown", (event) => {
+            if (Listen) {
+              Keybinds.Down = event.key;
+              Buttons.MenuVar = 2;
+              Listen = false;
+            }
+          });
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 610,
+        Y: 357,
+        W: 100,
+        H: 50,
+        MenuShow: [2, 3],
+        MenuGoal: 3,
+        Text: "Dash",
+        FontSize: 40,
+        Fun: function () {
+          let Listen = true;
+          Keybinds.Dash = " ";
+          document.addEventListener("keydown", (event) => {
+            if (Listen) {
+              Keybinds.Dash = event.key;
+              Buttons.MenuVar = 2;
+              Listen = false;
+            }
+          });
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 560,
+        Y: 425,
+        W: 150,
+        H: 50,
+        MenuShow: [2, 3],
+        MenuGoal: 3,
+        Text: "Speed Up",
+        FontSize: 30,
+        Fun: function () {
+          let Listen = true;
+          Keybinds.PlayerFast = " ";
+          document.addEventListener("keydown", (event) => {
+            if (Listen) {
+              Keybinds.PlayerFast = event.key;
+              Buttons.MenuVar = 2;
+              Listen = false;
+            }
+          });
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 560,
+        Y: 493,
+        W: 150,
+        H: 50,
+        MenuShow: [2, 3],
+        MenuGoal: 3,
+        Text: "Slow Down",
+        FontSize: 30,
+        Fun: function () {
+          let Listen = true;
+          Keybinds.PlayerSlow = " ";
+          document.addEventListener("keydown", (event) => {
+            if (Listen) {
+              Keybinds.PlayerSlow = event.key;
+              Buttons.MenuVar = 2;
+              Listen = false;
+            }
+          });
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 260,
+        Y: 140,
+        W: 200,
+        H: 100,
+        MenuShow: [4],
+        MenuGoal: -1,
+        Text: "Tutorial",
+        FontSize: 60,
+        Fun: function () {
+          PData.Mode = "Tutorial";
+          PData.Level = 101;
+          PData.StartLevel = 101;
+          PData.RealTime = 0;
+          PData.Replaying = false;
+          PData.CurrentReplay = "";
+          Level.LoadLevel(PData);
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 260,
+        Y: 250,
+        W: 200,
+        H: 100,
+        MenuShow: [4],
+        MenuGoal: 5,
+        Text: "Normal",
+        FontSize: 60,
+        Fun: function () {
+          PData.Mode = "Normal";
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 260,
+        Y: 360,
+        W: 200,
+        H: 100,
+        MenuShow: [4],
+        MenuGoal: 6,
+        Text: "Custom",
+        FontSize: 60,
+        Fun: function () {
+          let Listen = true;
+          document.addEventListener("paste", (event) => {
+            if (Listen && Buttons.MenuVar === 6) {
+              let Paste = event.clipboardData.getData("text").trim();
+              if (Paste.indexOf("@") < 0) {
+                alert("Invalid level code :(");
+              } else {
+                PData.Code = Paste;
+                PData.Mode = "Custom";
+                PData.Level = -2;
+                PData.StartLevel = -2;
+                PData.Replaying = false;
+                PData.CurrentReplay = "";
+                Buttons.MenuVar = -1;
+                PData.ReplayTime = 0;
+                PData.RealTime = 0;
+                PData.TotalTime = 0;
+                Level.LoadLevel(PData);
+                Listen = false;
+              }
+            }
+          });
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 10,
+        Y: 10,
+        W: 90,
+        H: 52,
+        MenuShow: [-1],
+        MenuGoal: -1,
+        Text: "Reset",
+        FontSize: 40,
+        Fun: function () {
+          if (!PData.Replaying) {
+            PData.Attempts++;
+            Level.LoadLevel(PData);
+          }
+        },
+        Disp: function () {
+          if (PData.Replaying) this.Text = "Replay";
+          else this.Text = "Reset";
+        }
+      });
+      Buttons.New({
+        X: 658,
+        Y: 10,
+        W: 52,
+        H: 52,
+        MenuShow: [-2, 4, 5, 6, 7],
+        MenuGoal: 0,
+        Text: "X",
+        FontSize: 40,
+        Fun: function () {},
+        Disp: function () {}
+      });
+      let Mouse = false;
+      document.addEventListener("mousedown", (event) => {
+        Mouse = true;
+        if (Buttons.MenuVar === -2) {
+          let X = (event.offsetX / Canvas.width) * 720;
+          let Y = (event.offsetY / Canvas.height) * 552;
+          if (Y > 72 && Y < 552 && X < 720 && X > 1 && Click) {
+            if (Holding < 16) {
+              X = Math.floor((X - 1) / 24);
+              Y = Math.floor((Y - 73) / 24);
+              PData.CustomList[X + Y * 30] = Holding;
+              for (let i = 600; i < PData.CustomList.length; i++) {
+                let Block = Math.floor(PData.CustomList[i] / 10000) % 10000;
+                if (Block === X * 100 + Y) {
+                  PData.CustomList.splice(i, 1);
+                  i = PData.CustomList.length;
+                }
+              }
+            }
+          }
+          Click = true;
+        }
+      });
+      document.addEventListener("mouseup", (event) => {
+        Mouse = false;
+      });
+      document.addEventListener("mousemove", (event) => {
+        if (Mouse && Buttons.MenuVar === -2) {
+          let X = (event.offsetX / Canvas.width) * 720;
+          let Y = (event.offsetY / Canvas.height) * 552;
+          if (Y > 72 && Y < 552 && X < 720 && X > 1 && Click) {
+            if (Holding < 16) {
+              X = Math.floor((X - 1) / 24);
+              Y = Math.floor((Y - 73) / 24);
+              PData.CustomList[X + Y * 30] = Holding;
+              for (let i = 600; i < PData.CustomList.length; i++) {
+                let Block = Math.floor(PData.CustomList[i] / 10000) % 10000;
+                if (Block === X * 100 + Y) {
+                  PData.CustomList.splice(i, 1);
+                  i = PData.CustomList.length;
+                }
+              }
+            }
+          }
+          Click = true;
+        }
+      });
+      let ResetColor = function () {
+        for (let i = 18; i <= 35; i++) {
+          Buttons.Buttons[i].BorderColor = "#000";
+        }
+      };
+
+      Buttons.New({
+        X: 3,
+        Y: 3,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 1;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+        }
+      });
+      Buttons.New({
+        X: 3,
+        Y: 36,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 2;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 4);
+        }
+      });
+      Buttons.New({
+        X: 36,
+        Y: 3,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 3;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#f00";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.fillStyle = "#f80";
+          Ctx.fillRect(this.X + 6, this.Y + 6, 8, 8);
+          Ctx.fillRect(this.X + 8, this.Y + 18, 8, 8);
+          Ctx.fillRect(this.X + 18, this.Y + 10, 8, 8);
+          Ctx.fillStyle = "#ff0";
+          Ctx.fillRect(this.X + 8, this.Y + 8, 4, 4);
+          Ctx.fillRect(this.X + 10, this.Y + 20, 4, 4);
+          Ctx.fillRect(this.X + 20, this.Y + 12, 4, 4);
+        }
+      });
+      Buttons.New({
+        X: 69,
+        Y: 3,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 4;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#f00";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.fillStyle = "#c11";
+          Ctx.fillRect(this.X + 10, this.Y + 10, 12, 12);
+        }
+      });
+      Buttons.New({
+        X: 102,
+        Y: 3,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 5;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#11c";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.fillStyle = "#66f";
+          Ctx.fillRect(this.X + 10, this.Y + 10, 12, 12);
+        }
+      });
+      Buttons.New({
+        X: 36,
+        Y: 36,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 6;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.fillStyle = "#0ff";
+          Ctx.fillRect(this.X + 6, this.Y + 6, 20, 20);
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 12, this.Y + 16, 8, 8);
+          for (let i = 0; i < 8; i++)
+            Ctx.fillRect(this.X + 15 - i, this.Y + 8 + i, 2 * (i + 1), 2);
+        }
+      });
+      Buttons.New({
+        X: 69,
+        Y: 36,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 7;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.fillStyle = "#0ff";
+          Ctx.fillRect(this.X + 6, this.Y + 6, 20, 20);
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 16, this.Y + 12, 8, 8);
+          for (let i = 0; i < 8; i++)
+            Ctx.fillRect(this.X + 15 - i, this.Y + 8 + i, 2, 2 * (8 - i));
+        }
+      });
+      Buttons.New({
+        X: 102,
+        Y: 36,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 8;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.fillStyle = "#0ff";
+          Ctx.fillRect(this.X + 6, this.Y + 6, 20, 20);
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 8, this.Y + 12, 8, 8);
+          for (let i = 0; i < 8; i++)
+            Ctx.fillRect(this.X + 15 + i, this.Y + 8 + i, 2, 2 * (8 - i));
+        }
+      });
+
+      Buttons.New({
+        X: 235,
+        Y: 3,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          ResetColor();
+          this.BorderColor = "#f00";
+          let Listen = 0;
+          Holding = 0;
+          var X = 0;
+          var Y = 0;
+          document.addEventListener("click", (event) => {
+            if (Listen === 1) {
+              let X2 = (event.offsetX / Canvas.width) * 720;
+              let Y2 = (event.offsetY / Canvas.height) * 552;
+              if (Y2 > 72 && Y2 < 552 && X2 < 720 && X2 > 0) {
+                X2 = Math.floor((X2 - 1) / 24);
+                Y2 = Math.floor((Y2 - 73) / 24);
+                PData.CustomList[X + Y * 30] = 10000 + X2 * 100 + Y2;
+                this.BorderColor = "#000";
+                Listen = 2;
+              }
+            }
+            if (Listen === 0) {
+              X = (event.offsetX / Canvas.width) * 720;
+              Y = (event.offsetY / Canvas.height) * 552;
+              if (Y > 72 && Y < 552 && X < 720 && X > 0) {
+                X = Math.floor((X - 1) / 24);
+                Y = Math.floor((Y - 73) / 24);
+                PData.CustomList[X + Y * 30] = 10000 + X * 100 + Y;
+                this.BorderColor = "#08f";
+                Holding = 10000;
+                Listen = 1;
+              }
+            }
+          });
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.clearRect(this.X + 6, this.Y + 6, 20, 20);
+          Ctx.fillRect(this.X + 8, this.Y + 8, 16, 16);
+          Ctx.clearRect(this.X + 10, this.Y + 10, 12, 12);
+          Ctx.fillRect(this.X + 12, this.Y + 12, 8, 8);
+          Ctx.clearRect(this.X + 14, this.Y + 14, 4, 4);
+        }
+      });
+      Buttons.New({
+        X: 235,
+        Y: 36,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          ResetColor();
+          this.BorderColor = "#f00";
+          let Listen = 0;
+          Holding = 0;
+          var X = 0;
+          var Y = 0;
+          document.addEventListener("click", (event) => {
+            if (Listen === 1) {
+              let X2 = (event.offsetX / Canvas.width) * 720;
+              let Y2 = (event.offsetY / Canvas.height) * 552;
+              if (Y2 > 72 && Y2 < 552 && X2 < 720 && X2 > 0) {
+                X2 = Math.floor((X2 - 1) / 24);
+                Y2 = Math.floor((Y2 - 73) / 24);
+                PData.CustomList[X + Y * 30] = 20000 + X2 * 100 + Y2;
+                this.BorderColor = "#000";
+                Listen = 2;
+              }
+            }
+            if (Listen === 0) {
+              X = (event.offsetX / Canvas.width) * 720;
+              Y = (event.offsetY / Canvas.height) * 552;
+              if (Y > 72 && Y < 552 && X < 720 && X > 0) {
+                X = Math.floor((X - 1) / 24);
+                Y = Math.floor((Y - 73) / 24);
+                PData.CustomList[X + Y * 30] = 20000 + X * 100 + Y;
+                this.BorderColor = "#08f";
+                Holding = 10000;
+                Listen = 1;
+              }
+            }
+          });
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.clearRect(this.X + 6, this.Y + 6, 20, 20);
+          Ctx.fillRect(this.X + 8, this.Y + 8, 16, 16);
+          Ctx.clearRect(this.X + 10, this.Y + 10, 12, 12);
+          Ctx.fillRect(this.X + 12, this.Y + 12, 8, 8);
+          Ctx.clearRect(this.X + 14, this.Y + 14, 4, 4);
+          Ctx.clearRect(this.X + 11, this.Y + 7, 10, 10);
+          Ctx.clearRect(this.X + 13, this.Y + 16, 6, 10);
+          Ctx.fillRect(this.X + 12, this.Y + 8, 8, 8);
+          Ctx.fillRect(this.X + 14, this.Y + 16, 4, 8);
+        }
+      });
+      Buttons.New({
+        X: 268,
+        Y: 3,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 9;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#cc0";
+          Ctx.fillRect(this.X + 4, this.Y + 10, 12, 12);
+          Ctx.fillRect(this.X + 16, this.Y + 14, 12, 4);
+          Ctx.fillRect(this.X + 19, this.Y + 18, 3, 4);
+          Ctx.fillRect(this.X + 25, this.Y + 18, 3, 4);
+          Ctx.fillStyle = "#f00";
+          Ctx.fillRect(this.X + 7, this.Y + 13, 6, 6);
+        }
+      });
+      Buttons.New({
+        X: 268,
+        Y: 36,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 0;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.clearRect(this.X + 6, this.Y + 6, 20, 20);
+          for (let i = 4; i < 22; i += 7) {
+            Ctx.clearRect(this.X + 4 + i, this.Y + 4, 2, 24);
+            Ctx.clearRect(this.X + 4, this.Y + 4 + i, 24, 2);
+          }
+        }
+      });
+      Buttons.New({
+        X: 135,
+        Y: 3,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 10;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 6, this.Y + 6, 13, 13);
+          Ctx.fillRect(this.X + 13, this.Y + 13, 13, 13);
+          Ctx.fillStyle = "#0c0";
+          Ctx.fillRect(this.X + 8, this.Y + 8, 9, 9);
+          Ctx.clearRect(this.X + 10, this.Y + 10, 5, 5);
+          Ctx.fillRect(this.X + 12, this.Y + 12, 4, 4);
+          Ctx.fillStyle = "#f00";
+          Ctx.fillRect(this.X + 15, this.Y + 15, 9, 9);
+          Ctx.clearRect(this.X + 17, this.Y + 17, 5, 5);
+          Ctx.fillRect(this.X + 16, this.Y + 16, 4, 4);
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 13, this.Y + 13, 6, 6);
+        }
+      });
+      Buttons.New({
+        X: 135,
+        Y: 36,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 11;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 5, this.Y + 15, 22, 2);
+          for (let i = 1; i <= 5; i++) {
+            Ctx.fillRect(this.X + 16 - 2 * i, this.Y + 3 + 2 * i, 4 * i, 3);
+            Ctx.fillRect(this.X + 16 - 2 * i, this.Y + 26 - 2 * i, 4 * i, 3);
+          }
+          for (let i = 1; i <= 4; i++) {
+            Ctx.fillStyle = "#f00";
+            Ctx.fillRect(
+              this.X + 16 - 2 * (i - 1),
+              this.Y + 25 - 2 * i,
+              4 * (i - 1),
+              3
+            );
+            Ctx.fillStyle = "#0c0";
+            Ctx.fillRect(
+              this.X + 16 - 2 * (i - 1),
+              this.Y + 4 + 2 * i,
+              4 * (i - 1),
+              3
+            );
+          }
+        }
+      });
+
+      Buttons.New({
+        X: 168,
+        Y: 3,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 12;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#04f";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.fillStyle = "#08f";
+          Ctx.fillRect(this.X + 8, this.Y + 14, 16, 4);
+        }
+      });
+      Buttons.New({
+        X: 168,
+        Y: 36,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 13;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#000";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.fillStyle = "#4ff";
+          Ctx.fillRect(this.X + 6, this.Y + 6, 20, 20);
+          Ctx.clearRect(this.X + 12, this.Y + 12, 8, 8);
+          Ctx.clearRect(this.X + 14, this.Y + 9, 4, 14);
+          Ctx.clearRect(this.X + 9, this.Y + 14, 14, 4);
+        }
+      });
+      Buttons.New({
+        X: 201,
+        Y: 3,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 14;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#fb0";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.fillStyle = "#ff0";
+          Ctx.fillRect(this.X + 8, this.Y + 8, 16, 16);
+        }
+      });
+      Buttons.New({
+        X: 201,
+        Y: 36,
+        W: 32,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Fun: function () {
+          Holding = 15;
+          ResetColor();
+          this.BorderColor = "#f00";
+        },
+        Disp: function (Ctx) {
+          Ctx.fillStyle = "#840";
+          Ctx.fillRect(this.X + 4, this.Y + 4, 24, 24);
+          Ctx.fillStyle = "#c80";
+          Ctx.fillRect(this.X + 7, this.Y + 7, 18, 18);
+        }
+      });
+      Buttons.New({
+        X: 301,
+        Y: 3,
+        W: 90,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -1,
+        Text: "Playtest",
+        FontSize: 25,
+        Fun: function () {
+          PData.Mode = "Playtest";
+          PData.Level = -2;
+          PData.StartLevel = -2;
+          PData.Code = Level.Encode(PData.CustomList);
+          PData.RealTime = 0;
+          PData.Attempts = 1;
+          PData.Replaying = false;
+          PData.CurrentReplay = "";
+          Level.LoadLevel(PData);
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 658,
+        Y: 10,
+        W: 52,
+        H: 52,
+        MenuShow: [-1],
+        MenuGoal: 0,
+        Text: "X",
+        FontSize: 40,
+        Fun: function () {
+          if (PData.Mode === "Playtest") Buttons.MenuVar = -2;
+        },
+        Disp: function () {}
+      });
+      for (let i = 0; i < 15; i++) {
+        Buttons.New({
+          X: 60 + 128 * (i % 5),
+          Y: 82 + 120 * Math.floor(i / 5),
+          W: 88,
+          H: 88,
+          MenuShow: [5],
+          MenuGoal: 5,
+          Text: i + 1,
+          FontSize: 40,
+          Fun: function () {
+            if (PData.MaxLevel >= this.Text) {
+              PData.Mode = "Normal";
+              PData.RealTime = 0;
+              PData.TotalTime = 0;
+              PData.Level = this.Text;
+              PData.StartLevel = this.Text;
+              PData.Replaying = false;
+              PData.CurrentReplay = "";
+              Buttons.MenuVar = -1;
+              Level.LoadLevel(PData);
+            }
+          },
+          Disp: function (Ctx) {
+            if (PData.MaxLevel < this.Text) {
+              Ctx.fillStyle = "#888";
+              Ctx.fillRect(this.X + 4, this.Y + 4, 80, 80);
+              Ctx.textAlign = "center";
+              Ctx.font = "40px sans-serif";
+              Ctx.fillStyle = "#000";
+              Ctx.fillText(this.Text, this.X + 44, this.Y + 51, 80);
+              Ctx.font = "20px sans-serif";
+              Ctx.fillText("LOCKED", this.X + 44, this.Y + 80, 76);
+            }
+          }
+        });
+      }
+      Buttons.New({
+        X: 40,
+        Y: 320,
+        W: 300,
+        H: 100,
+        MenuShow: [-4, -3],
+        MenuGoal: -1,
+        Text: "Play again",
+        FontSize: 60,
+        Fun: function () {
+          PData.RealTime = 0;
+          PData.ReplayTime = 0;
+          PData.Time = 0;
+          PData.Attempts = 1;
+          PData.Level = PData.StartLevel;
+          PData.CodeIndex = 0;
+          if (!PData.Replaying) PData.CurrentReplay = "";
+          Level.LoadLevel(PData);
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 380,
+        Y: 320,
+        W: 300,
+        H: 100,
+        MenuShow: [-4, -3],
+        MenuGoal: 0,
+        Text: "Main Menu",
+        FontSize: 60,
+        Fun: function () {
+          if (PData.Mode === "Playtest") Buttons.MenuVar = -2;
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 210,
+        Y: 430,
+        W: 300,
+        H: 100,
+        MenuShow: [-3],
+        MenuGoal: -3,
+        Text: "Save Replay",
+        FontSize: 60,
+        Fun: function () {
+          let Code = PData.StartLevel + ";";
+          if (Level.MainCode(PData.StartLevel) === -1) Code += PData.Code;
+          Code += ";" + PData.CurrentReplay;
+          Code = Level.Encode2(Code);
+          let HTML =
+            '<h2 style="user-select: none;">Copy the code below (CTRL+A then CTRL+C):</h2>';
+          HTML += '<p style="word-wrap: break-word;">' + Code + "</p>";
+          let tab = window.open("about:blank", "_blank");
+          tab.document.write(HTML);
+          tab.document.close();
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 301,
+        Y: 36,
+        W: 90,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Text: "Export",
+        FontSize: 25,
+        Fun: function () {
+          let HTML =
+            '<h2 style="user-select: none;">Copy the code below (CTRL+A then CTRL+C):</h2>';
+          HTML +=
+            '<p style="word-wrap: break-word;">' +
+            Level.Encode(PData.CustomList) +
+            "</p>";
+          HTML +=
+            '<p style="user-select: none;">\nYou can also create multi-level codes by pasting one code to the end of another!</p>';
+          let tab = window.open("about:blank", "_blank");
+          tab.document.write(HTML);
+          tab.document.close();
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 392,
+        Y: 36,
+        W: 90,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Text: "Import",
+        FontSize: 25,
+        Fun: function () {
+          alert("Paste level code from clipboard to edit it!");
+          let Listen = true;
+          document.addEventListener("paste", (event) => {
+            if (Listen && Buttons.MenuVar === -2) {
+              let Paste = event.clipboardData.getData("text").trim();
+              if (Paste.indexOf("@") < 0) {
+                alert("Invalid level code :(");
+              } else {
+                PData.CustomList = Level.Decode(Paste);
+                Listen = false;
+              }
+            }
+          });
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 392,
+        Y: 3,
+        W: 90,
+        H: 32,
+        MenuShow: [-2],
+        MenuGoal: -2,
+        Text: "Clear",
+        FontSize: 25,
+        Confirmation: false,
+        Fun: function () {
+          if (this.Confirmation) {
+            for (let i = 0; i < 600; i++) PData.CustomList[i] = 0;
+            this.Confirmation = false;
+            this.BorderColor = "#000";
+            this.TextColor = "#000";
+          } else {
+            this.Confirmation = true;
+            this.BorderColor = "#f00";
+            this.TextColor = "#f00";
+          }
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 260,
+        Y: 420,
+        W: 200,
+        H: 100,
+        MenuShow: [0],
+        MenuGoal: 7,
+        Text: "Replays",
+        FontSize: 55,
+        Fun: function () {
+          let Listen = true;
+          document.addEventListener("paste", (event) => {
+            let Paste = event.clipboardData.getData("text").trim();
+            if (Listen && Buttons.MenuVar === 7) {
+              if (
+                Paste.indexOf(";") < 0 ||
+                Paste.substring(Paste.indexOf(";") + 1).indexOf(";") < 0
+              ) {
+                alert("Invalid replay code :(");
+              } else {
+                PData.CurrentReplay = Paste;
+                Buttons.MenuVar = -1;
+                PData.Mode = "Replay";
+                let index = PData.CurrentReplay.indexOf(";");
+                PData.Level = parseInt(PData.CurrentReplay.substring(0, index));
+                PData.StartLevel = PData.Level;
+                PData.CurrentReplay = PData.CurrentReplay.substring(index + 1);
+                index = PData.CurrentReplay.indexOf(";");
+                if (Level.MainCode(PData.Level) === -1)
+                  PData.Code = Level.Decode2(PData.CurrentReplay.substring(0, index));
+                PData.CurrentReplay = PData.CurrentReplay.substring(index + 1);
+                PData.CurrentReplay = Level.Decode2(PData.CurrentReplay);
+                PData.Replaying = true;
+                PData.ReplayTime = 0;
+                PData.RealTime = 0;
+                PData.Time = 0;
+                PData.Attempts = 1;
+                PData.CodeIndex = 0;
+                Level.LoadLevel(PData);
+                Listen = false;
+              }
+            }
+          });
+        },
+        Disp: function () {}
+      });
+      Buttons.New({
+        X: 446,
+        Y: 11,
+        W: 100,
+        H: 50,
+        MenuShow: [-1],
+        MenuGoal: -1,
+        Text: "Pause",
+        FontSize: 35,
+        Temp: 1,
+        Fun: function () {
+          if (this.Text === "Pause") {
+            this.Temp = PData.TimeSpeed;
+            PData.TimeSpeed = 0;
+            this.Text = "Play";
+          } else if (this.Text === "Play") {
+            PData.TimeSpeed = this.Temp;
+            this.Text = "Pause";
+          }
+        },
+        Disp: function () {
+          if (this.Text === "Play" && !PData.Replaying) {
+            Ctx.globalAlpha = 0.5;
+            Ctx.fillStyle = "#000";
+            Ctx.fillRect(0, 72, 720, 720);
+            Ctx.globalAlpha = 1;
+          }
+        }
+      });
+      Buttons.New({
+        X: 551,
+        Y: 11,
+        W: 50,
+        H: 50,
+        MenuShow: [-1],
+        MenuGoal: -1,
+        Text: ">",
+        FontSize: 35,
+        Temp: 1,
+        Opacity: 1,
+        Fun: function () {
+          if (PData.TimeSpeed === 0 && PData.Replaying) {
+            PData.TimeSpeed = 1;
+            Game.Update(Fullscreen, Ctx, Buttons, Menu, Keybinds, PData, Level);
+            PData.TimeSpeed = 0;
+          }
+        },
+        Disp: function () {
+          if (PData.TimeSpeed === 0 && PData.Replaying) this.Opacity = 1;
+          else this.Opacity = 0;
+        }
+      });
+      Buttons.New({
+        X: 205,
+        Y: 455,
+        W: 50,
+        H: 50,
+        MenuShow: [5],
+        MenuGoal: 5,
+        Text: "",
+        FontSize: 35,
+        Temp: 1,
+        Opacity: 1,
+        Fun: function () {
+          PData.SingSeg = !PData.SingSeg;
+        },
+        Disp: function () {
+          if (PData.SingSeg) {
+            Ctx.lineWidth = 5;
+            Ctx.strokeStyle = "#000";
+            Ctx.moveTo(this.X + 8, this.Y + 28);
+            Ctx.lineTo(this.X + 25, this.Y + 42);
+            Ctx.lineTo(this.X + 42, this.Y + 8);
+            Ctx.stroke();
+            Ctx.lineWidth = 1;
+          }
+        }
+      });
+
+    </script>
+  </body>
+</html>
