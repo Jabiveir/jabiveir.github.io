@@ -1,5 +1,0 @@
-User-agent: *
-Disallow: /Assets
-Disallow: /Games
-Disallow: /JabiveirQuest
-Disallow: /JCV
