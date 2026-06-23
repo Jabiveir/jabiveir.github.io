@@ -62,6 +62,9 @@
       #about {
         background-color: #fbf
       }
+      @media (max-width: 575px) {
+        #urger {display: none !important;}
+      }
     </style>
   </head>
   <body style="background-color: #dfe; margin: 0;">
@@ -197,7 +200,7 @@
     </div>
     </div>
 
-    <img src="./Assets/Urger.jpg" style="display: block; margin-top: 5000px; height: 400px;">
+    <img id="urger" src="./Assets/Urger.jpg" style="display: block; margin-top: 5000px; height: 400px;">
 
     <div id="TooSmall" style="position: fixed; width: calc(100% - 16px); height: 100%; top: 0; left: 0; padding: 8px; background-color: #fff; display: none">
       <h1><b style="color: #f00; text-shadow: #000 0.75px 0.75px;">Uh Oh!</b></h1>
@@ -210,7 +213,7 @@
 
         Alternatively, here's a button for you to press.<br><br><br><br><br>
       </span>
-      <img id="button" onmousedown="ButtonPush();" onmouseup="ButtonHsup();" src="./Assets/Button.png" style="position: absolute; left: calc(50% - 64px);">
+      <img id="button" onmousedown="ButtonPush();" onmouseup="ButtonHsup();" ontouchstart="ButtonPush();" ontouchend="ButtonHsup();" src="./Assets/Button.png" style="position: absolute; left: calc(50% - 64px);">
     </div>
     <script>
       if(window.innerWidth < 575) {
