@@ -3,6 +3,7 @@
   <head>
     <title>Jabiveir Website</title>
     <meta name="description" content="My awesome cool website :)"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="icon" type="image/x-icon" href="./Assets/Logo.png">
     <style>
       h1 {
@@ -202,16 +203,19 @@
     <img id="urger" src="./Assets/Urger.jpg" style="display: block; margin-top: 5000px; height: 400px;">
 
     <div id="TooSmall" style="position: fixed; width: calc(100% - 16px); height: 100%; top: 0; left: 0; padding: 8px; background-color: #fff; display: none">
-      <h1><b style="color: #f00; text-shadow: #000 0.75px 0.75px;">Uh Oh!</b></h1>
-      <span>
-        Looks like you're using this site on a phone (or your browser window is very thin).
-        Unfortunately, this breaks the site design.
-        I have opted not to make a mobile-friendly layout for the site, because most of its content is designed solely for computers, anyway.
-        It is thus recommended that you <b>view this website on a computer.</b>
-        If you wish to proceed in spite of this, put your device in landscape mode (or widen the window) and refresh the page.<br><br>
+      <details open>
+        <summary style="font-size: 14px;">( Click to toggle text )</summary>
+        <h1><b style="color: #f00; text-shadow: #000 0.75px 0.75px;">Uh Oh!</b></h1>
+        <span>
+          Looks like you're using this site on a phone (or your browser window is very thin).
+          Unfortunately, this breaks the site design.
+          I have opted not to make a mobile-friendly layout for the site, because most of its content is designed solely for computers, anyway.
+          It is thus recommended that you <b>view this website on a computer.</b>
+          If you wish to proceed in spite of this, put your device in landscape mode (or widen the window) and refresh the page.<br><br>
 
-        Alternatively, here's a button for you to press.<br><br><br><br>
-      </span>
+          Alternatively, here's a button for you to press.<br><br><br><br>
+        </span>
+      </details>
       <b><span id="score" style="display: block; text-align: center; font-size: 24px"><br></span></b>
       <img id="button" oncontextmenu="return false;" src="./Assets/Button.png" style="display: block; margin-left: auto; margin-right: auto; user-select: none;">
       <div style="position: relative; margin-left: auto; margin-right: auto; width: 200px; height: 24px; border: #000 solid 4px; padding: 2px; display: none;">
