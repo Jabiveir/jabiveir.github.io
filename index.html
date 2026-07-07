@@ -281,9 +281,9 @@
       document.getElementById("button").addEventListener((TouchEnabled ? "touchend" : "mouseup"), BH, false);
 
       var Error = false;
-      window.onerror = function () {
+      /*window.onerror = function () {
         Error = true;
-      }
+      }*/
 
       function Tick() {
         if(!Error) {
