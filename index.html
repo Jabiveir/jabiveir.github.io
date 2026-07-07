@@ -211,21 +211,110 @@
         It is thus recommended that you <b>view this website on a computer.</b>
         If you wish to proceed in spite of this, put your device in landscape mode (or widen the window) and refresh the page.<br><br>
 
-        Alternatively, here's a button for you to press.<br><br><br><br><br>
+        Alternatively, here's a button for you to press.<br><br><br><br>
       </span>
-      <img id="button" onmousedown="ButtonPush();" onmouseup="ButtonHsup();" ontouchstart="ButtonPush();" ontouchend="ButtonHsup();" src="./Assets/Button.png" style="position: absolute; left: calc(50% - 64px);">
+      <b><span id="score" style="display: block; text-align: center; font-size: 24px"><br></span></b>
+      <img id="button" oncontextmenu="return false;" src="./Assets/Button.png" style="display: block; margin-left: auto; margin-right: auto; user-select: none;">
+      <div style="position: relative; margin-left: auto; margin-right: auto; width: 200px; height: 24px; border: #000 solid 4px; padding: 2px; display: none;">
+        <div id="combo" style="position: absolute; width: 0; height: calc(100% - 4px); background-color: #0f0;"></div>
+        <b id="combob" style="position: absolute; right: 214px; top: 4px">1x</b>
+      </div>
+      <div style="position: relative; margin-left: auto; margin-right: auto; margin-top: 6px; width: 200px; height: 24px; border: #000 solid 4px; padding: 2px; display: none;">
+        <div id="charge" style="position: absolute; width: 0; height: calc(100% - 4px); background-color: #00f;"></div>
+        <b style="position: absolute; right: 214px; top: -4px">Combo Charge</b>
+      </div>
+      <div id="SCAM" style="position: relative; text-align: center; display: none;">
+        <br>
+        <b><span>Score-Combo Amplitude Modulator<br></span></b>
+        <div style="position: relative;">
+          <img src="./Assets/SCAM.png" style="display: block; margin-left: auto; margin-right: auto;">
+          <img id="SCAMD" src="./Assets/SCAMDot.png" style="position: absolute; bottom: calc(50% - 8px); left: calc(50% - 8px);">
+        </div>
+      </div>
+      <span id="end" style="display: none;">Okay there's nothign more to unlock</span>
+      
     </div>
     <script>
       if(window.innerWidth < 575) {
         document.getElementsByTagName("body")[0].style.overflow = "hidden";
         document.getElementById("TooSmall").style.display = "block";
+        window.setInterval(Tick,16.7);
       }
 
-      function ButtonPush() {
+      let Score = 0;
+      var Combo = 1;
+      var Pushed = false;
+      var Hold = 0;
+      var Charge = 0;
+      var Charge2 = 0;
+      var Rot = 0;
+      let BP = function ButtonPush() {
         document.getElementById("button").src = "./Assets/ButtonPush.png";
+        Score += Math.floor(Combo);
+        if(Score > 20) Combo += 0.1;
+        if(Score > 500) Combo += Charge2 / 10;
+        if(Score > 2000) {
+          Combo += Math.sin(Rot)*2*(1+Charge2)/10;
+          Score += Math.floor(Math.cos(Rot)*2*Math.floor(Combo));
+        }
+        Pushed = true;
+
+        Score = Math.floor(Score);
+        document.getElementById("score").innerHTML = Score + "<br>";
+
+        if(Score === 20) document.getElementById("combo").parentElement.style.display = "block";
+        if(Score > 500) document.getElementById("charge").parentElement.style.display = "block";
+        if(Score > 2000) document.getElementById("SCAM").style.display = "block";
+        if(Score > 10000) document.getElementById("end").style.display = "block";
       }
-      function ButtonHsup() {
+      let BH = function ButtonHsup() {
+        Pushed = false;
         document.getElementById("button").src = "./Assets/Button.png";
+      }
+
+      //Thank you Stack Overflow user johnkreitlow for the clever touchscreen detection
+      let TouchEnabled = window.Touch || false;
+      document.getElementById("button").addEventListener((TouchEnabled ? "touchstart" : "mousedown"), BP, false);
+      document.getElementById("button").addEventListener((TouchEnabled ? "touchend" : "mouseup"), BH, false);
+
+      var Error = false;
+      window.onerror = function () {
+        Error = true;
+      }
+
+      function Tick() {
+        if(!Error) {
+          if(Combo > 1) {
+            if(Combo < 1.04) Combo = 1;
+            else Combo -= Combo/200;
+          }
+          if(Pushed) {
+            Hold += 0.05;
+            if(Hold >= 1) {
+              if(Charge < 5) Charge += 0.05;
+              if(Charge > Charge2) Charge2 = Charge;
+            }
+          } else {
+            Hold = 0;
+            if(Charge > 0) Charge -= 0.05;
+            if(Charge < 0) {
+              if(Charge2 > 0.05) Charge2 -= 0.1;
+              else Charge2 = 0;
+            }
+          }
+          document.getElementById("combo").style.width = (Combo*25 - 25) + "px";
+          let C = Math.min(Combo, 9) / 9;
+          let R = Math.floor((C - Math.abs(C-0.5) + 0.5)*255);
+          let G = Math.floor((1.5 - Math.abs(C-0.5) - C)*255);
+          document.getElementById("combo").style.backgroundColor = "#" + R.toString(16) + G.toString(16) + "00";
+          document.getElementById("combob").innerHTML = Math.floor(Combo) + "x"
+          document.getElementById("charge").style.backgroundColor = "#00" + Math.floor(Charge/5*255).toString(16) + "ff";
+          document.getElementById("charge").style.width = Math.max(Charge2*40-2, 0) + "px";
+          
+          document.getElementById("SCAMD").style.bottom = "calc(50% - 8px + " + Math.floor(56*Math.sin(Rot)) + "px)";
+          document.getElementById("SCAMD").style.left = "calc(50% - 8px + " + Math.floor(56*Math.cos(Rot)) + "px)";
+          Rot += Combo / 100;
+        }
       }
     </script>
   </body>
