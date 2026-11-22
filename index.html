@@ -84,7 +84,7 @@
     </div>
     <div id="a" style="position: absolute; top: 0; right: 0; text-align: right; background-color: #fff; border: solid 2px #000; padding: 8px; padding-top: 4px; padding-bottom: 6px;">
       <span style="font-size: 14px;">
-        <br>
+        <a href="./achievements.html" style="margin-left: 0">Achievements</a><br>
         <a href="./devblog.html" style="margin-left: 0;">Development Blog</a><br>
         <a href="./legacy.html" style="margin-left: 0;">Legacy Page</a>
       </span>
@@ -104,7 +104,7 @@
             Contains 15 main levels (along with a tutorial) and a level creator, from which custom levels can be shared via level codes. Replays of completed levels can also be saved and shared via replay codes.<br>
             My biggest and finest game yet, in my opinion.
           </span><br><br>
-          <span><a href="./Games/JTA2/v1-1/index.html">Play Jabiveir: The Adventure 2</a></span>
+          <span><a href="./Games/JTA2/index.html">Play Jabiveir: The Adventure 2</a></span>
         </div>
       </div>
       <hr style="width: calc(100% - 8px);">
@@ -113,11 +113,12 @@
         <img box src="./Assets/FNaJ.png" style="float: right; height: 200px; margin: 8px;">
         <h1>Five Nights at Jabiveir's</h1>
         <div style="margin-left: 20px;">
+          <span><i>(Mobile-compatible)</i></span><br>
           <span>A parody of Five Nights at Freddy's. In this "horror" game, you must use your flashlight to defend against Jabiveir until 6 AM, all the while managing battery and fear levels.<br>
             Contains 5 main nights, a secret sixth night, and a seventh customizable night, where difficulties can be set manually. There is also a set of extra challenges and cheats to make the game easier or harder.<br>
             Features magnificent MS Paint art.
           </span><br><br>
-          <span><a href="./Games/FNaJ/v1-2/index.html">Play Five Nights at Jabiveir's</a></span>
+          <span><a href="./Games/FNaJ/v1-3/index.html">Play Five Nights at Jabiveir's</a></span>
         </div>
       </div>
       <hr style="width: calc(100% - 8px);">
@@ -130,7 +131,7 @@
             Contains a tutorial level for movement, 7 main levels, a tutorial level for shooting, and a final boss level.<br>
             Was made in just 3 days as a birthday gift, repurposing the J:TA engine.
           </span><br><br>
-          <span><a href="./Games/JG/v1-0/index.html">Play JabiGear 2 (1): Solid Veir</a></span>
+          <span><a href="./Games/JG/index.html">Play JabiGear 2 (1): Solid Veir</a></span>
         </div>
       </div>
       <hr style="width: calc(100% - 8px);">
@@ -139,11 +140,12 @@
         <img box src="./Assets/JTA.png" style="float: right; height: 200px; margin: 8px;">
         <h1>Jabiveir: The Adventure</h1>
         <div style="margin-left: 20px;">
+          <span><i>(Mobile-compatible)</i></span><br>
           <span>A simple platformer game in which Jabiveir must traverse deadly obstacles to reach the green flags.<br>
             Contains a tutorial level for movement and 15 main levels.<br>
             The first game on the site to use JavaScript. Most of the physics logic was ripped straight from Mario 64.
           </span><br><br>
-          <span><a href="./Games/JTA/v2-1/index.html">Play Jabiveir: The Adventure</a></span>
+          <span><a href="./Games/JTA/index.html">Play Jabiveir: The Adventure</a></span>
         </div>
       </div>
       <hr style="width: calc(100% - 8px);">
@@ -156,7 +158,7 @@
             Contains basic Connect 4 functionality, plus customization for board size, the connection length required to win, and the number of players, along with a turn timer.<br>
             Was made at the request of a buddy, and submitted as a final project in a Computer Science A class.
           </span><br><br>
-          <span><a href="./Games/Connect4/v1-0/index.html">Play Connect 4*</a></span>
+          <span><a href="./Games/Connect4/index.html">Play Connect 4*</a></span>
         </div>
       </div>
       <hr style="width: calc(100% - 8px);">
@@ -170,7 +172,7 @@
             Choices are made by following hyperlinks to reach different pages. Contains 28 possible endings and 14 possible ways to die.<br>
             This was the first game I ever made for the website, so please excuse the poor writing.
           </span><br><br>
-          <span><a href="./Games/JQ/v1-0/JabiveirQuest.html">Play Jabiveir Quest</a></span>
+          <span><a href="./Games/JQ/v1-1/JabiveirQuest.html">Play Jabiveir Quest</a></span>
         </div>
       </div>
       <hr style="width: calc(100% - 8px);">
@@ -248,94 +250,123 @@
       
     </div>
     <script>
-      if(window.innerWidth < 575) {
+      let Ach = "0";
+      let name = "Ach=";
+      let ca = decodeURIComponent(document.cookie).split(";");
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === " ") {c = c.substring(1);}
+        if (c.indexOf(name) === 0) Ach = c.substring(name.length, c.length);
+      }
+      while(Ach.length < 20) {Ach += "0";}
+      let d = new Date();
+      d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+      document.cookie = "Ach=" + Ach + ";expires=" + d.toUTCString() + ";path=/";
+
+      if(window.innerWidth < 575) { //Initiates button game if window too thin
         document.getElementsByTagName("body")[0].style.overflow = "hidden";
         document.getElementById("a").style.display = "none";
         document.getElementById("TooSmall").style.display = "block";
         window.setInterval(Tick,17);
-      }
 
-      document.getElementById("shield").oncontextmenu = function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        return false;
-      };
+        document.getElementById("shield").oncontextmenu = function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          return false;
+        };
 
-      let Score = 0;
-      var Combo = 1;
-      var Pushed = false;
-      var Hold = 0;
-      var Charge = 0;
-      var Charge2 = 0;
-      var Rot = 0;
-      let BP = function ButtonPush() {
-        document.getElementById("button").src = "./Assets/ButtonPush.png";
-        Score += Math.floor(Combo);
-        if(Score > 20) Combo += 0.1;
-        if(Score > 500) Combo += Charge2 / 10;
-        if(Score > 2000) {
-          Combo += Math.sin(Rot)*2*(1+Charge2)/10;
-          Score += Math.floor(Math.cos(Rot)*2*Math.floor(Combo));
-        }
-        Pushed = true;
-
-        Score = Math.floor(Score);
-        document.getElementById("score").innerHTML = Score + "<br>";
-
-        if(Score === 20) document.getElementById("combo").parentElement.style.display = "block";
-        if(Score > 500) document.getElementById("charge").parentElement.style.display = "block";
-        if(Score > 2000) document.getElementById("SCAM").style.display = "block";
-        if(Score > 10000) document.getElementById("end").style.display = "block";
-      }
-      let BH = function ButtonHsup() {
-        Pushed = false;
-        document.getElementById("button").src = "./Assets/Button.png";
-      }
-
-      //Thank you Stack Overflow user johnkreitlow for the clever touchscreen detection
-      let TouchEnabled = window.Touch || false;
-      document.getElementById("shield").addEventListener((TouchEnabled ? "touchstart" : "mousedown"), BP, false);
-      document.getElementById("shield").addEventListener((TouchEnabled ? "touchend" : "mouseup"), BH, false);
-
-      var Error = false;
-      /*window.onerror = function () {
-        Error = true;
-      }*/
-
-      function Tick() {
-        if(!Error) {
-          if(Combo > 1) {
-            if(Combo < 1.04) Combo = 1;
-            else Combo -= Combo/200;
+        let Score = 0;
+        var Combo = 1;
+        var Pushed = false;
+        var Hold = 0;
+        var Charge = 0;
+        var Charge2 = 0;
+        var Rot = 0;
+        let BP = function ButtonPush() {
+          document.getElementById("button").src = "./Assets/ButtonPush.png";
+          Score += Math.floor(Combo);
+          if(document.getElementById("combo").parentElement.style.display === "block") Combo += 0.1;
+          if(document.getElementById("charge").parentElement.style.display === "block") Combo += Charge2 / 10;
+          if(document.getElementById("SCAM").style.display === "block") {
+            Combo += Math.sin(Rot)*2*(1+Charge2)/10;
+            Score += Math.floor(Math.cos(Rot)*2*Math.floor(Combo));
           }
-          if(Pushed) {
-            Hold += 0.05;
-            if(Hold >= 1) {
-              if(Charge < 5) Charge += 0.05;
-              if(Charge > Charge2) Charge2 = Charge;
-            }
-          } else {
-            Hold = 0;
-            if(Charge > 0) Charge -= 0.05;
-            if(Charge < 0) {
-              if(Charge2 > 0.05) Charge2 -= 0.1;
-              else Charge2 = 0;
+          Pushed = true;
+
+          Score = Math.floor(Score);
+          document.getElementById("score").innerHTML = Score + "<br>";
+
+          if(Score === 20) document.getElementById("combo").parentElement.style.display = "block";
+          if(Score > 500) document.getElementById("charge").parentElement.style.display = "block";
+          if(Score > 2000) document.getElementById("SCAM").style.display = "block";
+          if(Score > 10000) {
+            document.getElementById("end").style.display = "block";
+            if(!!Ach && Ach[18] === "0") {
+              Ach = Ach.slice(0, 18) + "1" + Ach.slice(18+1);
+              document.cookie = "Ach=" + Ach + ";expires=" + d.toUTCString() + ";path=/";
+              alert("Achievement unlocked!\n'Pressed'");
             }
           }
-          document.getElementById("combo").style.width = (Combo*25 - 25) + "px";
-          let C = Math.min(Combo, 9) / 9;
-          let R = Math.floor((C - Math.abs(C-0.5) + 0.5)*255);
-          let G = Math.floor((1.5 - Math.abs(C-0.5) - C)*255);
-          document.getElementById("combo").style.backgroundColor = "#" + R.toString(16) + G.toString(16) + "00";
-          document.getElementById("combob").innerHTML = Math.floor(Combo) + "x"
-          document.getElementById("charge").style.backgroundColor = "#00" + Math.floor(Charge/5*255).toString(16) + "ff";
-          document.getElementById("charge").style.width = Math.max(Charge2*40-2, 0) + "px";
-          
-          document.getElementById("SCAMD").style.bottom = "calc(50% - 8px + " + Math.floor(56*Math.sin(Rot)) + "px)";
-          document.getElementById("SCAMD").style.left = "calc(50% - 8px + " + Math.floor(56*Math.cos(Rot)) + "px)";
-          Rot += Combo / 100;
+          if(Score < 0) {
+            if(!!Ach && Ach[19] === "0") {
+              Ach = Ach.slice(0, 19) + "1" + Ach.slice(19+1);
+              document.cookie = "Ach=" + Ach + ";expires=" + d.toUTCString() + ";path=/";
+              alert("Achievement unlocked!\n'Wrong Way!'");
+            }
+          }
+        }
+        let BH = function ButtonHsup() {
+          Pushed = false;
+          document.getElementById("button").src = "./Assets/Button.png";
+        }
+
+        //Thank you Stack Overflow user johnkreitlow for the clever touchscreen detection
+        let TouchEnabled = window.Touch || false;
+        document.getElementById("shield").addEventListener((TouchEnabled ? "touchstart" : "mousedown"), BP, false);
+        document.getElementById("shield").addEventListener((TouchEnabled ? "touchend" : "mouseup"), BH, false);
+
+        var Error = false;
+        /*window.onerror = function () {
+          Error = true;
+        }*/
+
+        function Tick() {
+          if(!Error) {
+            if(Combo > 1) {
+              if(Combo < 1.04) Combo = 1;
+              else Combo -= Combo/200;
+            }
+            if(Pushed) {
+              Hold += 0.05;
+              if(Hold >= 1) {
+                if(Charge < 5) Charge += 0.05;
+                if(Charge > Charge2) Charge2 = Charge;
+              }
+            } else {
+              Hold = 0;
+              if(Charge > 0) Charge -= 0.05;
+              if(Charge < 0) {
+                if(Charge2 > 0.05) Charge2 -= 0.1;
+                else Charge2 = 0;
+              }
+            }
+            document.getElementById("combo").style.width = (Combo*25 - 25) + "px";
+            let C = Math.min(Combo, 9) / 9;
+            let R = Math.floor((C - Math.abs(C-0.5) + 0.5)*255);
+            let G = Math.floor((1.5 - Math.abs(C-0.5) - C)*255);
+            document.getElementById("combo").style.backgroundColor = "#" + R.toString(16) + G.toString(16) + "00";
+            document.getElementById("combob").innerHTML = Math.floor(Combo) + "x"
+            document.getElementById("charge").style.backgroundColor = "#00" + Math.floor(Charge/5*255).toString(16) + "ff";
+            document.getElementById("charge").style.width = Math.max(Charge2*40-2, 0) + "px";
+
+            document.getElementById("SCAMD").style.bottom = "calc(50% - 8px + " + Math.floor(56*Math.sin(Rot)) + "px)";
+            document.getElementById("SCAMD").style.left = "calc(50% - 8px + " + Math.floor(56*Math.cos(Rot)) + "px)";
+            Rot += Combo / 100;
+          }
         }
       }
+
+      
     </script>
   </body>
 </html>

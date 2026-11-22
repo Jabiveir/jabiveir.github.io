@@ -27,6 +27,29 @@
     <img src="./Assets/BlogFlame.gif">
     <a href="./index.html"><img id="back" src="./Assets/Back.PNG" style="float: right; height: 50px;"></a>
     <details>
+      <summary>Achievements!! - 22 November, 2026</summary>
+      <div style="min-height: 216px;">
+        <img src="./Assets/SmartGayCat.jpg" style="float: right; height: 200px; margin: 8px;">
+        <span>
+          Sorry to keep you waiting!<br>
+          It's a bit hard to remember what even happened at this point, but if I remember right, I took a bit of a break after the previous update, and then I got a lot of work done on this one, but it was right before my college classes were starting back up. I got like 90% done with the update, but then I got busy with schoolwork and completely forgot about it for a while,,,<br>
+          But! After taking literally just a week or so to finish it up, it's ready!<br>
+          <br>
+          Astute users may have noticed a peculiar gap in the top-right box on the main page; that gap has now been filled with a link to the achievements page!<br>
+          I've put some achievements into every game on the site (except Connect 4*) as well as a couple miscellaneous achievements <span onclick="HereYouGo();">(one of which you can get by clicking on this parenthetical!)</span>.<br>
+          I'm pretty proud of the pixel art I did for the achievement icons; I think I'm actually getting quite decent. And, for the record, the lock icon was supposed to be placeholder art. I kept it because it charmed me.<br>
+          From this point forward, each game I make is gonna have achievements built-in, so stay up-to-date if you want 100% completion!<br>
+          <br>
+          Speaking of which, I NEED TO MAKE MORE GAMES!! I think it has genuinely been multiple years since I've made a complete game (The Button doesn't count). I've done a bunch of redesigning and adding new features, but the core of the site has been stagnant for so long!<br>
+          I have three games from ages ago that are partway complete, and they do seem like pretty good ideas, but I'm not sure if the end-product is gonna be any good. It's probably worth trying to finish them even if it ends up bad, though.<br>
+          I've also been itching to make a 3-D engine, but I don't really have any ideas for what I'd make with it. A voxel sandbox game comes to mind, but that seems a bit overdone at this point.<br>
+          Recently I've been getting into Mega Man, so I'd also like to make a game like that.<br>
+          Lastly, I want to expand the software section of the site. I almost want to try remaking JabiChat again (for the fourth time, I think), but I know that's gonna be far too big of an undertaking. It would be cool to make a program that's a carbon-copy of MS Paint that works on Linux, because that's one of the few things still stopping me from making the switch.<br>
+          Whatever it ends up being, I definitely wanna add more stuff to the site soon.
+        </span>
+      </div>
+    </details>
+    <details>
       <summary>Mobile Patch - 6 July, 2026</summary>
       <div style="min-height: 216px;">
         <img src="./Assets/CatButton.gif" style="float: right; height: 200px; margin: 8px;">
@@ -77,5 +100,24 @@
         </span>
       </div>
     </details>
+    <script>
+      function HereYouGo() {
+        let Ach;
+        let name = "Ach=";
+        let ca = decodeURIComponent(document.cookie).split(";");
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === " ") {c = c.substring(1);}
+          if (c.indexOf(name) === 0) Ach = c.substring(name.length, c.length);
+        }
+        if(Ach[0] === "0") {
+          Ach = Ach.slice(0, 0) + "1" + Ach.slice(0+1);
+          let d = new Date();
+          d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+          document.cookie = "Ach=" + Ach + ";expires=" + d.toUTCString() + ";path=/";
+          alert("Achievement unlocked!\n'Here You Go'");
+        }
+      }
+    </script>
   </body>
 </html>

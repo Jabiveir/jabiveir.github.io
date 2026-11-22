@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="robots" content="none">
+  <title>Ending 19</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <h1 style="text-align:center;">Ending 19</h1>
+  <hr /><br />
+  <p style="text-align:center;">THE LOOORE</p><br />
+  <hr /><br />
+  <p style="text-align:center;"><a href="./JabiveirQuest.html">Jabiveir Quest</a><br /><br /></p>
+
+  <script>
+    let Ach;
+    let name = "Ach=";
+    let ca = decodeURIComponent(document.cookie).split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === " ") {c = c.substring(1);}
+      if (c.indexOf(name) === 0) Ach = c.substring(name.length, c.length);
+    }
+    if(Ach[2] === "0") {
+      Ach = Ach.slice(0, 2) + "1" + Ach.slice(2+1);
+      let d = new Date();
+      d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+      document.cookie = "Ach=" + Ach + ";expires=" + d.toUTCString() + ";path=/";
+      alert("Achievement unlocked!\n'Loremaster'");
+    }
+    
+    let JQEs;
+    let name2 = "JQEs=";
+    let ca2 = decodeURIComponent(document.cookie).split(";");
+    for (let i = 0; i < ca2.length; i++) {
+      let c = ca2[i];
+      while (c.charAt(0) === " ") {c = c.substring(1);}
+      if (c.indexOf(name2) === 0) JQEs = c.substring(name2.length, c.length);
+    }
+    if(!JQEs || JQEs[19] === "0") {
+      if(!JQEs) JQEs = "0".repeat(29);
+      JQEs = JQEs.slice(0, 19) + "1" + JQEs.slice(19+1);
+      let d = new Date();
+      d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+      document.cookie = "JQEs=" + JQEs + ";expires=" + d.toUTCString() + ";path=/";
+      
+      if(JQEs === "1".repeat(29)) {
+        let Ach;
+        let name = "Ach=";
+        let ca = decodeURIComponent(document.cookie).split(";");
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === " ") {c = c.substring(1);}
+          if (c.indexOf(name) === 0) Ach = c.substring(name.length, c.length);
+        }
+        if(Ach[3] === "0") {
+          Ach = Ach.slice(0, 3) + "1" + Ach.slice(3+1);
+          let d = new Date();
+          d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+          document.cookie = "Ach=" + Ach + ";expires=" + d.toUTCString() + ";path=/";
+          alert("Achievement unlocked!\n'Completionist'");
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="robots" content="none">
+  <title>Ending 18</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <h1 style="text-align:center;">Ending 18</h1>
+  <hr /><br />
+  <p style="text-align:center;">Jabiveir lives in a grocery store</p><br />
+  <hr /><br />
+  <p style="text-align:center;"><a href="./JabiveirQuest.html">Jabiveir Quest</a><br /><br /></p>
+  <script>
+    let JQEs;
+    let name = "JQEs=";
+    let ca = decodeURIComponent(document.cookie).split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === " ") {c = c.substring(1);}
+      if (c.indexOf(name) === 0) JQEs = c.substring(name.length, c.length);
+    }
+    if(!JQEs || JQEs[18] === "0") {
+      if(!JQEs) JQEs = "0".repeat(29);
+      JQEs = JQEs.slice(0, 18) + "1" + JQEs.slice(18+1);
+      let d = new Date();
+      d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+      document.cookie = "JQEs=" + JQEs + ";expires=" + d.toUTCString() + ";path=/";
+      
+      if(JQEs === "1".repeat(29)) {
+        let Ach;
+        let name = "Ach=";
+        let ca = decodeURIComponent(document.cookie).split(";");
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === " ") {c = c.substring(1);}
+          if (c.indexOf(name) === 0) Ach = c.substring(name.length, c.length);
+        }
+        if(Ach[3] === "0") {
+          Ach = Ach.slice(0, 3) + "1" + Ach.slice(3+1);
+          let d = new Date();
+          d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+          document.cookie = "Ach=" + Ach + ";expires=" + d.toUTCString() + ";path=/";
+          alert("Achievement unlocked!\n'Completionist'");
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
