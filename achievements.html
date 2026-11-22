@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Jabiveir Website</title>
+    <meta name="description" content="My awesome cool website :)"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/x-icon" href="./Assets/Logo.png">
+    <style>
+      h1 {
+        font-size: 32px;
+        margin: 10px;
+        margin-left: 12px;
+        font-weight: bold;
+        color: #000;
+      }
+      span {
+        font-size: 18px;
+        color: #000
+      }
+      span a {
+        margin-left: 0;
+        color: blue;
+      }
+      #header {
+        color: #0f0;
+        text-shadow: 0.75px 0 #000,
+                     0 0.75px #000,
+                     -0.75px 0 #000,
+                     0 -0.75px #000;
+        font-size: 48px;
+        margin: 0px;
+        position: absolute;
+        cursor: default;
+      }
+      div[grid] {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 8px;
+
+      }
+      div[grid] > div {
+        width: 500px;
+        height: 100px;
+        box-shadow: 4px 4px #bdc;
+      }
+      div[Game="JQ"] {background-color: #0f0;}
+      div[Game="JTA"] {background-color: #ff0;}
+      div[Game="JG"] {background-color: #c0c;}
+      div[Game="FNaJ"] {background-color: #f80;}
+      div[Game="JTA2"] {background-color: #0ff;}
+      div[Game="Button"] {background-color: #f00;}
+      div[Game="Misc"] {background-color: #888;}
+      div[grid] > div > div {
+        background-color: #eee;
+        margin: 8px;
+        width: calc(100% - 36px);
+        height: calc(100% - 36px);
+        border: solid 2px #000;
+        padding: 8px;
+      }
+      div[grid] > div > div:hover {
+        margin-top: 6px;
+        margin-bottom: 10px;
+      }
+      div[grid] img {
+        height: 64px;
+        float: left;
+        margin-right: 8px;
+        box-shadow: 2px 2px #bbb;
+      }
+      div[grid] span {
+        font-size: 16px;
+      }
+      div[grid] i {
+        font-size: 14px;
+        float: right;
+      }
+      div > span[U] {display: none;}
+      div[Unlocked] > span[U] {display: initial;}
+      div[Unlocked] > span[L] {display: none;}
+      div[Unlocked] > img {box-shadow: 2px 2px #ccc}
+      div[Unlocked] {background-color: #fff !important;}
+    </style>
+  </head>
+  <body style="background-color: #dfe; margin: 0;">
+    <div style="padding: 12px;">
+    <div style="float: left;">
+      <img src="./Assets/Logo.png" style="height:56px;">
+      <span id="header">
+        <b style="margin-left: 10px;">Jabiveir Website</b>
+      </span>
+    </div>
+    <div id="a" style="position: absolute; top: 0; right: 0; text-align: right; background-color: #fff; border: solid 2px #000; padding: 12px; padding-top: 8px; padding-bottom: 10px;">
+      <span style="font-size: 14px;">
+        <a href="./index.html">< Back to main page</a>
+      </span>
+    </div>
+    <hr style="width: calc(100% + 6px); left: -4px; position: relative;">
+    <h1>Achievements</h1>
+    <div grid>
+      <div Game="JQ"><div id="1">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>True Ending</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Reach Ending 28, the true ending, in Jabiveir Quest.<br><br></span>
+        <span U><i>"All's well that ends well, eh?"</i></span>
+      </div></div>
+      <div Game="JQ"><div id="2">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Loremaster</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Reach Ending 19 in Jabiveir Quest, using the code obtained from the true ending.<br></span>
+        <span U><i>"It's me."</i></span>
+      </div></div>
+      <div Game="JQ"><div id="3">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Completionist</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Reach every ending of Jabiveir Quest.<br><br></span>
+        <span U><i>"In the beard!"</i></span>
+      </div></div>
+      <div Game="JTA"><div id="4">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Adventurer</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Beat Jabiveir: The Adventure.<br><br></span>
+        <span U><i>"Thank you so much-a for-to playing my game!"</i></span>
+      </div></div>
+      <div Game="JTA"><div id="5">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Fast I</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Beat Jabiveir: The Adventure in under 20 minutes.<br><br></span>
+        <span U><i>"I outrank you in this scenario!"</i></span>
+      </div></div>
+      <div Game="JTA"><div id="6">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Fast II</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Beat Jabiveir: The Adventure in under 10 minutes.<br><br></span>
+        <span U><i>Not to be confused with 'Fast 2'.</i></span>
+      </div></div>
+      <div Game="JTA"><div id="7">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>True Adventurer</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Beat Jabiveir: The Adventure without dying once.<br><br></span>
+        <span U><i>"First try, idiot!"</i></span>
+      </div></div>
+      <div Game="JG"><div id="8">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Solid</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Beat JabiGear 2 (1): Solid Veir.<br><br></span>
+        <span U><i>Happy birthday!</i></span>
+      </div></div>
+      <div Game="JG"><div id="9">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Ocelot</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Beat JabiGear 2 (1): Solid Veir in under 10 minutes.<br><br></span>
+        <span U><i>"Hauk sent me in. We've gotta move fast."</i></span>
+      </div></div>
+      <div Game="JG"><div id="10">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Solidus</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Beat JabiGear 2 (1): Solid Veir without dying once.<br><br></span>
+        <span U><i>"Mission... accomplished!"</i></span>
+      </div></div>
+      <div Game="FNaJ"><div id="11">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Paycheck</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Complete the sixth night of Five Nights at Jabiveir's.<br><br></span>
+        <span U><i>"You're not Foxy!"</i></span>
+      </div></div>
+      <div Game="FNaJ"><div id="12">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Pink Slip</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Complete the 20/20/20 mode custom night of Five Nights at Jabiveir's.<br></span>
+        <span U><i>"With skill, and triumph, and vim and vigor!"</i></span>
+      </div></div>
+      <div Game="JTA2"><div id="13">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Adventure Twoer</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Beat Jabiveir: The Adventure 2.<br><br></span>
+        <span U><i>"Thank you so much-a for-two playing my game!"</i></span>
+      </div></div>
+      <div Game="JTA2"><div id="14">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>True Adventure Twoer</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Beat the main campaign of Jabiveir: The Adventure 2 in one session without dying once.<br></span>
+        <span U><i>"TWO!"</i></span>
+      </div></div>
+      <div Game="JTA2"><div id="16">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Adventure Bluer</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Beat each main level of Jabiveir: The Adventure 2 without slowing time.<br></span>
+        <span U><i>"About 20% cooler."</i></span>
+      </div></div>
+      <div Game="JTA2"><div id="15">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Fast 2</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Beat the main campaign of Jabiveir: The Adventure 2 in one session under 20 minutes.<br></span>
+        <span U><i>Not to be confused with 'Fast II'.</i></span>
+      </div></div>
+      <div Game="Button"><div id="18">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Pressed</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Reach a score of 10,000 on the Button.<br><br></span>
+        <span U><i>You're welcome, mobile users.</i></span>
+      </div></div>
+      <div Game="Button"><div id="19">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Wrong Way!</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Reach a negative score on the Button.<br><br></span>
+        <span U><i>"Happens."</i></span>
+      </div></div>
+      <div Game="Misc"><div id="0">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Here You Go</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Click on the free achievement button on the blog post announcing the achievement update.<br></span>
+        <span U><i>"Well, that was a freebie."</i></span>
+      </div></div>
+      <div Game="Misc"><div id="17">
+        <img src="./Assets/Ach/Lock.png">
+        <span><b>Not Found</b></span><br>
+        <span L>This achievement is locked.<br></span>
+        <span U>Stumble upon the Error 404 page.<br><br></span>
+        <span U><i>"A prison for the isn't."</i></span>
+      </div></div>
+    </div>
+    <script>
+      let Ach = "0";
+      let name = "Ach=";
+      let ca = decodeURIComponent(document.cookie).split(";");
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === " ") {c = c.substring(1);}
+        if (c.indexOf(name) === 0) Ach = c.substring(name.length, c.length);
+      }
+      let d = new Date();
+      d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+      document.cookie = "Ach=" + Ach + ";expires=" + d.toUTCString() + ";path=/";
+
+      let AchOrder = []
+      for(let i = 0; i < Ach.length; i++) {
+        if(Ach[i] === "1") {
+          document.getElementById(i.toString()).setAttribute("Unlocked", "");
+          document.getElementById(i.toString()).firstElementChild.src = "./Assets/Ach/" + i + ".png";
+        }
+      }
+    </script>
+  </body>
+</html>
